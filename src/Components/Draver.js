@@ -2,16 +2,9 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 
 import { withStyles } from '@material-ui/core/styles';
 import MuiAccordion from '@material-ui/core/Accordion';
@@ -25,9 +18,9 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        // display: 'flex',
+        display: 'flex',
         width: "100%",
-        paddingLeft: 240,
+        // paddingLeft: 240,
         minHeight: "100vh"
     },
     appBar: {
@@ -39,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
         flexShrink: 0,
         color: "white",
         "& .MuiDrawer-paper":{
+            position: "relative",
             paddingTop: 60,
             color: "#EEE",
             zIndex: 0,
@@ -64,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Accordion = withStyles({
     root: {
-        border: '1px solid rgba(0, 0, 0, .125)',
         boxShadow: 'none',
         '&:not(:last-child)': {
             borderBottom: 0,
@@ -82,7 +75,7 @@ const AccordionSummary = withStyles((theme)=>({
     root: {
         backgroundColor: theme.palette.background.default,
         color: theme.palette.primary.main,
-        borderBottom: '1px solid rgba(0, 0, 0, .125)',
+        borderBottom: '1px solid #DDD',
         marginBottom: -1,
         minHeight: 56,
         '&$expanded': {

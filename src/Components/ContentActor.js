@@ -97,73 +97,100 @@ const ContentActor = React.memo((props)=>{
 
     // console.log("content actor render");
 
-    const [ firmItems, setFirmItems] = React.useState([])
-    const [ firmImgs, setFirmImgs] = React.useState([])
+    const [ movieItems, setmovieItems] = React.useState([])
+    const [ actorImages, setActorImages] = React.useState([])
     const [ actor, setActor] = React.useState({})
 
     async function fetchData() {
-        let response = await axios(
-            `http://localhost/Cinema/actor/GetActorContent/${actorID}`
+        let resActorDetails = await axios(
+            `http://localhost/Cinema/Actor/GetActorDetailsById/${actorID}`
         );
-        let dataList = await response.data;
+        let dataActorDetails = await resActorDetails.data;
 
-        // console.log(user);
-        dataList[1]? setFirmImgs(dataList[1]) : setFirmImgs([]);
-        dataList[2]? setFirmItems(dataList[2]) : setFirmItems([]);
-        dataList[3]? setActor(dataList[3]) : setActor({});
+
+        let resActorImages = await axios(
+            `http://localhost/Cinema/Actor/GetActorImagesById/${actorID}`
+        );
+        let dataListActorImages = await resActorImages.data;
+
+        let resMovieItems = await axios(
+            `http://localhost/Cinema/Movie/GetMovieItemsByActorId/${actorID}/4`
+        );
+        let dataListMovieItems = await resMovieItems.data;
+
+        // Actor imgs
+        dataListActorImages["data"]!==[]?
+            setActorImages(dataListActorImages["data"]) :
+            setActorImages([]);
+
+        dataListMovieItems["data"]?
+            setmovieItems(dataListMovieItems["data"]) :
+            setmovieItems([]);
+
+        // Actor Details
+        dataActorDetails["data"]!=={} ?
+            setActor(dataActorDetails["data"]) :
+            setActor({});
     }
 
     React.useEffect(() => {
         fetchData();
     },[]);
 
-    // console.log(firmImgs, "imgs");
-    // console.log(firmItems[0], "items");
-
+    // const handleOnItemClick = (id)=> {
+    //     const findFirmItem = movieItems.find(
+    //         firmItems=>(parseInt(firmItems.movieId) === id));
+    //     const newFirmItem ={...findFirmItem};
+    //
+    //     const index = movieItems.findIndex(x => x.movieId === findFirmItem.movieId);
+    //     newFirmItem.liked = newFirmItem.liked=== "0" ? "1" : "0";
+    //     const newFirmItems = [...movieItems];
+    //     newFirmItems[index] = newFirmItem;
+    //     setmovieItems(newFirmItems);
+    // }
     const handleOnItemClick = (id)=> {
-        const findFirmItem = firmItems.find(firmItems=>(parseInt(firmItems.movieId) === id));
-        const newFirmItem ={...findFirmItem};
-
-        const index = firmItems.findIndex(x => x.movieId === findFirmItem.movieId);
-        newFirmItem.liked = newFirmItem.liked=== "0" ? "1" : "0";
-        const newFirmItems = [...firmItems];
+        let findFirmItem = movieItems.find(
+            firmItems=>(parseInt(firmItems.movie_id) === id));
+        let newFirmItem ={...findFirmItem};
+        let index = movieItems.findIndex(x => x.movie_id === findFirmItem.movie_id);
+        newFirmItem.liked = newFirmItem.liked==="0" ? "1" : "0";
+        // console.log(newFirmItem.liked, itemsOpening[index].liked);
+        let newFirmItems = [...movieItems];
         newFirmItems[index] = newFirmItem;
-        setFirmItems(newFirmItems);
+        //
+        setmovieItems(newFirmItems);
     }
 
 
-    const   itemsTop =
-
-        (firmItems==="") ? (<Typography variant="h4" color="primary" >
-                <br/><br/>
-                No Firm
-            </Typography>) :
-
-        firmItems.map(
-            (item,index)=>{
-                return (
-                    <FirmItem
-                        id={item.movieId}
-                        itemUrl={item.avatarUrl}
-                        itemName={item.movieName}
-                        showTime= {item.show_time}
-                        liked={item.liked.toString()}
-                        maining={item.mainType}
-                        key={index}
-                        onItemClick={handleOnItemClick}
-                    />
-                );
-            }
-        );
+    const itemsTop = (
+        movieItems===[] ?
+        (<Typography variant="h4" color="primary" >
+            <br/><br/>
+            No Firm
+        </Typography>) :
+        movieItems.map(
+            (item, index)=>(
+                <FirmItem
+                    id={item.movie_id}
+                    itemUrl={item.avatar_url}
+                    itemName={item.movie_name}
+                    showTime={item.release_date}
+                    maining={item.main_type}
+                    liked={item.liked}
+                    key={index}
+                    onItemClick={handleOnItemClick}
+                />
+            )
+        ));
 
 
     const avatarSubs =
 
-        (firmImgs==="") ? (<Typography variant="h4" color="primary" >
+        (actorImages===[]) ? (<Typography variant="h4" color="primary" >
                 No Img
             </Typography>) :
 
-        firmImgs.map((item,index)=>{
+        actorImages.map((item,index)=>{
         return(
             <Box
                 key={index}
@@ -275,7 +302,7 @@ const ContentActor = React.memo((props)=>{
                         <Link to="/Actor">SEE ALL</Link>
                     </Typography>
                 </Box>
-                <Box className={classes.contentBottom} display="flex" justifyContent="space-between" flexWrap="wrap">
+                <Box className={classes.contentBottom} display="flex" justifyContent="flex-start" flexWrap="wrap">
                     {itemsTop}
                 </Box>
             </Grid>

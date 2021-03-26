@@ -12,14 +12,11 @@ const Home = ()=>{
 
     async function fetchData() {
         let response = await axios.post(
-            `http://localhost/Cinema/home/GetHomeBanner`
+            `http://localhost/Cinema/Movie/GetMovieBannerById/20`
         );
         let res = await response.data;
 
-
-        // console.log(res[1]);
-        setMovie(res[1][0]);
-
+        setMovie(res["data"]);
     }
 
     React.useEffect(() => {
@@ -28,7 +25,6 @@ const Home = ()=>{
 
     return(
         <>
-            <Header />
             <Banner
                 id={String(movie.movie_id)}
                 url={
@@ -41,7 +37,6 @@ const Home = ()=>{
                 bannerType="home"
             />
             <ContentHome />
-            <Footer />
         </>
     );
 }

@@ -23,7 +23,7 @@ function App(props) {
             <Box className="App" >
                 <ThemeProvider theme={Theme}>
                     <CssBaseline />
-                    <Route path="/:page" component={Header}/>
+                    <Header />
                     <Route path="/Admin/:id" exact component={Admin} />
                     <Route path="/" exact component={Home} />
                     <Route path="/Movies" exact component={Movies} />
@@ -33,7 +33,7 @@ function App(props) {
                     <Route path="/Login" exact component={Login} />
                     <Route path="/Booking/:id" exact component={Booking}/>
                     <Route path="/Booking" exact component={Booking}/>
-                    <Route path="/:page" component={Footer}/>
+                    <Footer />
                 </ThemeProvider>
             </Box>
         </Router>
