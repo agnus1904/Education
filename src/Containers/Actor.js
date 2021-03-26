@@ -11,12 +11,12 @@ const Actor = React.memo(({match})=>{
 
     async function fetchData() {
         let response = await axios(
-            `http://localhost/Cinema/actor/GetActorBanner/${match.params.id}`
+            `http://localhost/Cinema/Actor/GetActorBannerById/${match.params.id}`
         );
-        let user = await response.data;
+        let actor = await response.data;
 
         // console.log(user);
-        setActor(user[0]);
+        setActor(actor["data"]);
     }
 
     React.useEffect(() => {

@@ -35,15 +35,18 @@ const ContentHome = ()=>{
 
 
     async function fetchData() {
-        let response = await axios(
-            `http://localhost/Cinema/home/GetHomeContent`
+        let responseOpening = await axios(
+            `http://localhost/Cinema/Movie/GetMovieItemsSortByView/8`
         );
-        let dataList = await response.data;
+        let dataListOpening = await responseOpening.data;
 
-        // console.log(user);
+        let responseComing = await axios(
+            `http://localhost/Cinema/Movie/GetMovieItemsSortByView/4`
+        );
+        let dataListComing = await responseComing.data;
 
-        setItemsOpening(dataList[1]);
-        setItemsComing(dataList[2]);
+        dataListOpening["data"] ? setItemsOpening(dataListOpening["data"]) : setItemsOpening([]);
+        dataListComing["data"]? setItemsComing(dataListComing["data"]) : setItemsComing([]);
     }
 
     React.useEffect(() => {
@@ -64,7 +67,7 @@ const ContentHome = ()=>{
         setItemsOpening(newFirmItems);
     }
 
-    const itemsTop = (itemsOpening==="" ?
+    const itemsTop = (itemsOpening===[] ?
         (<Typography variant="h4" color="primary" >
             <br/><br/>
             No Firm
@@ -75,7 +78,7 @@ const ContentHome = ()=>{
                     id={item.movie_id}
                     itemUrl={item.avatar_url}
                     itemName={item.movie_name}
-                    showTime={item.show_time}
+                    showTime={item.release_date}
                     maining={item.main_type}
                     liked={item.liked}
                     key={index}
@@ -100,7 +103,7 @@ const ContentHome = ()=>{
         setItemsComing(newFirmItems);
     }
 
-    const itemsBottom = (itemsComing==="" ?
+    const itemsBottom = (itemsComing===[] ?
         (<Typography variant="h4" color="primary" >
             <br/><br/>
             No Firm
@@ -111,7 +114,7 @@ const ContentHome = ()=>{
                     id={item.movie_id}
                     itemUrl={item.avatar_url}
                     itemName={item.movie_name}
-                    showTime={item.show_time}
+                    showTime={item.release_date}
                     maining={item.main_type}
                     liked={item.liked}
                     key={index}

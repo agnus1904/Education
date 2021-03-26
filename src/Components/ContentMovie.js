@@ -58,17 +58,25 @@ const ContentMovie = (props)=>{
     const [actors, setActors] = React.useState([])
 
     async function fetchData() {
-        let response = await axios(
-            `http://localhost/Cinema/Movie/GetMovieContent/${movie_id}`
+        let responseMovie = await axios(
+            `http://localhost/Cinema/Movie/GetMovieDetailsById/${movie_id}`
         );
-        let dataList = await response.data;
+        let dataListMovie = await responseMovie.data;
 
-        dataList[1] ? setMovie(dataList[1][0]) : setMovie({});
-        dataList[2] ? setActors(dataList[2]) : setActors([]);
+        let responseActors = await axios(
+            `http://localhost/Cinema/Actor/GetActorByMovieId/${movie_id}`
+        );
+        let dataListActors = await responseActors.data;
+
+        // console.log(dataList["data"]);
+        dataListMovie["data"] ? setMovie(dataListMovie["data"]) : setMovie({});
+        dataListActors["data"] ? setActors(dataListActors["data"]) : setActors([]);
+
     }
+    console.log(actors);
 
     const listActors =
-        !actors ? "" :
+        actors===[] ? "" :
 
         actors.map(
         (actor,index)=>(
@@ -152,7 +160,7 @@ const ContentMovie = (props)=>{
                                 </Typography>
                                 <Typography color="primary" variant="subtitle2" >
                                     {
-                                        movie.release ? movie.release : ""
+                                        movie.release_date
                                     }
                                 </Typography>
                             </Box>

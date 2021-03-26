@@ -38,16 +38,19 @@ const Movies = ()=>{
 
 
     async function fetchData() {
-        let response = await axios(
-            `http://localhost/Cinema/home/GetHomeContent`
+        let responseOpening = await axios(
+            `http://localhost/Cinema/Movie/GetMovieItemsSortByView/8`
         );
-        let dataList = await response.data;
+        let dataListOpening = await responseOpening.data;
 
-        // console.log(dataList[1]);
+        let responseComing = await axios(
+            `http://localhost/Cinema/Movie/GetMovieItemsSortByView/4`
+        );
+        let dataListComing = await responseComing.data;
 
-        setItemsOpening(dataList[1]);
-        setItemsComing(dataList[2]);
-    };
+        dataListOpening["data"] ? setItemsOpening(dataListOpening["data"]) : setItemsOpening([]);
+        dataListComing["data"]? setItemsComing(dataListComing["data"]) : setItemsComing([]);
+    }
 
     React.useEffect(() => {
         fetchData();
@@ -65,7 +68,7 @@ const Movies = ()=>{
         setItemsOpening(newFirmItems);
     }
 
-    const itemsTop = (itemsOpening===[] ?
+    const itemsTop = (itemsOpening==[] ?
         (<Typography variant="h4" color="primary" >
             <br/><br/>
             No Firm

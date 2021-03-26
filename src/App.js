@@ -39,7 +39,5 @@ function App(props) {
         </Router>
     );
 }
-
-// const NewApp = withRouter(App);
 export default App;
 

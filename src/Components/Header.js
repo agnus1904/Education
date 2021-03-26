@@ -292,7 +292,7 @@ export default function Header(props) {
                     </Box>
                     <Box>
                         <Button
-                            href="/Movie" 
+                            href="/Admin/1"
                             variant="contained"
                             className={classes.btn}
                         >

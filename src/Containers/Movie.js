@@ -12,12 +12,12 @@ const Movie = ({match})=>{
 
     async function fetchData() {
         let response = await axios(
-            `http://localhost/Cinema/Movie/GetMovieBanner/${match.params.id}`
+            `http://localhost/Cinema/Movie/GetMovieBannerById/${match.params.id}`
         );
         let dataList = await response.data;
 
-        // console.log(dataList);
-        dataList[1] ? setMovie(dataList[1][0]): setMovie([])
+        // console.log(dataList["data"]);
+        dataList["data"] ? setMovie(dataList["data"]): setMovie([])
     }
 
     React.useEffect(() => {
@@ -37,8 +37,8 @@ const Movie = ({match})=>{
                 }
                 bannerType="movie"
             />
-            {/* Content */}
-            <ConetentMovie  
+             Content
+            <ConetentMovie
                 movie_id={match.params.id}
             />
         </>
