@@ -14,6 +14,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
+import BookingFormLocation from "./BookingFormLocation"
+import axios from "axios";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +61,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Accordion = withStyles({
     root: {
+        margin: "auto",
+        cursor: "pointer",
         boxShadow: 'none',
         '&:not(:last-child)': {
             borderBottom: 0,
@@ -125,10 +130,71 @@ function a11yProps(index) {
     };
 }
 
+
 export default function PermanentDrawerLeft() {
     const classes = useStyles();
 
     const [expanded, setExpanded] = React.useState('panel1');
+    const [province, setProvince] = React.useState("");
+    const [provinces, setProvinces] = React.useState([]);
+    const [cinema, setCinema] = React.useState("");
+    const [cinemas, setCinemas] = React.useState([]);
+    const [bookingtime, setBookingTime] = React.useState(
+        ()=>{
+            let today = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + dd;
+            return today;
+        }
+    );
+
+    console.log(province,"province");
+    console.log(cinema,"cinema");
+    console.log(bookingtime,"bookingtime");
+
+
+    async function fetchProvince() {
+        let response = await axios.post(
+            `http://localhost/Cinema/PublicController/GetProvince`
+        );
+        let res = await response.data;
+
+        setProvinces(res["data"]);
+    }
+
+    async function fetchCinema(cinemaId) {
+        let response = await axios.post(
+            `http://localhost/Cinema/PublicController/GetCinema/${cinemaId}`
+        );
+        let res = await response.data;
+
+        setCinemas(res["data"]);
+    }
+
+    React.useEffect(() => {
+        fetchProvince();
+    },[]);
+
+    const onItemClickLocation = (proviceId)=>{
+        // console.log(proviceId);
+        setProvince(proviceId);
+        fetchCinema(proviceId);
+    }
+
+    const onItemClickCinema = (cinemaId)=>{
+        setCinema(cinemaId);
+        // console.log(cinemaId);
+        // fetchCinema(cinemaId);
+    }
+
+    const onItemClickTime = (NewBookingTime)=>{
+        setBookingTime(NewBookingTime);
+        // console.log(cinemaId);
+        // fetchCinema(cinemaId);
+    }
 
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -139,7 +205,6 @@ export default function PermanentDrawerLeft() {
     const handleChangePage = (event, newValue) => {
         setValue(newValue);
     };
-
 
     return (
         <div className={classes.root}>
@@ -159,7 +224,7 @@ export default function PermanentDrawerLeft() {
                         <Accordion square expanded={expanded === `panel1`}
                                    onChange={handleChange(`panel1`)}>
                             <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                                <Typography>Collapsible Group Item #1</Typography>
+                                <Typography>Create New</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Tabs
@@ -180,12 +245,20 @@ export default function PermanentDrawerLeft() {
                         <Accordion square expanded={expanded === `panel2`}
                                    onChange={handleChange(`panel2`)}>
                             <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                                <Typography>Collapsible Group Item #2</Typography>
+                                <Typography>Management</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <Typography>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                </Typography>
+                                <Tabs
+                                    orientation="vertical"
+                                    variant="scrollable"
+                                    value={value}
+                                    onChange={handleChangePage}
+                                    aria-label="Vertical tabs example"
+                                    className={classes.tabs}
+                                >
+                                    <Tab label="Item Three" {...a11yProps(2)} />
+                                    <Tab label="Item For" {...a11yProps(3)} />
+                                </Tabs>
                             </AccordionDetails>
                         </Accordion>
                     </ListItem>
@@ -195,12 +268,25 @@ export default function PermanentDrawerLeft() {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Box>
-
                     <TabPanel value={value} index={0}>
                         Item One
+                        <BookingFormLocation
+                            provinces={provinces}
+                            onItemClickLocation={onItemClickLocation}
+                            cinemas={cinemas}
+                            onItemClickCinema={onItemClickCinema}
+                            bookingTime={bookingtime}
+                            onItemClickTime={onItemClickTime}
+                        />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         Item Two
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        Item Three
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                        Item For
                     </TabPanel>
                 </Box>
             </main>

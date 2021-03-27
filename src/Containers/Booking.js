@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const Booking = (props)=> {
 
     const [cookies, setCookie] = useCookies(['name']);
+    const [login, setLogin] = React.useState(0);
 
     const classes = useStyles();
 
@@ -42,12 +43,19 @@ const Booking = (props)=> {
                 )
             );
             let res = response.data;
-            console.log(res);
-            if(!res[1]["login-status"]){
-                props.history.push(`/Login/${props.match.params.id}`);
+
+            // console.log(res);
+            if(!res[1]["login-status"]) {
+                props.history.push(`/Login/${
+                    props.match.params.id ? props.match.params.id : ""
+                }`);
+            }else{
+                setLogin(1);
             }
         }else{
-            props.history.push(`/Login/${props.match.params.id}`);
+            props.history.push(`/Login/${
+                props.match.params.id ? props.match.params.id : ""
+            }`);
         }
     }
 
@@ -55,15 +63,21 @@ const Booking = (props)=> {
         fetchData();
     },[]);
 
-    return(
-        <Box className={classes.root}>
-            <Stepper />
-            {/*<Box className={classes.bottom}>*/}
-            {/*    this is booking form*/}
-            {/*</Box>*/}
-            <button type="button" onClick={handleLogOut} >Logout</button>
-        </Box>
-    )
+    if(login===0){
+        return(
+            <Box className={classes.root}></Box>
+        )
+    }else{
+        return(
+            <Box className={classes.root}>
+                <Stepper movieId={
+                    props.match.params.id ? props.match.params.id : 0
+                }/>
+                <button type="button" onClick={handleLogOut} >Logout</button>
+            </Box>
+        )
+    }
+
 }
 
 export default Booking;

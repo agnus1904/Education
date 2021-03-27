@@ -9,7 +9,6 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.default,
         minHeight: "100vh",
         display: "flex",
-        // padding: "100px 200px",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",

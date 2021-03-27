@@ -9,11 +9,13 @@ import { withStyles } from '@material-ui/core/styles';
 import { red, blue, yellow, green } from '@material-ui/core/colors';
 import {Box, FormControl, InputLabel, Select, TextField} from "@material-ui/core";
 import FirmItem from "./FirmItem";
+import BookingFormLocation from "./BookingFormLocation";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         color: theme.palette.primary.main,
-        padding: "80px 150px",
+        padding: "70px 150px",
         width: '100%',
         "& .MuiStepper-root":{
             backgroundColor: theme.palette.background.default,
@@ -47,65 +49,6 @@ const useStyles = makeStyles((theme) => ({
     instructions: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
-    },
-    formControl:{
-        width: 250,
-        marginTop: 35,
-        display: "flex",
-        flexDirection: "column",
-        "& .MuiInputLabel-animated":{
-            color: "white",
-        },
-        "& .MuiFormLabel-root":{
-            fontSize: "1.6rem",
-            color: red[800],
-        },
-        "& label + .MuiInput-formControl":{
-            marginTop: 30,
-        },
-        "& .MuiFormLabel-filled":{
-            // marginBottom: 10,
-        },
-        "& .MuiInputBase-root":{
-            color: "white",
-            fontSize: "1.3rem",
-        },
-        "& .MuiInput-underline:before":{
-            borderBottom: "2px solid #CCC",
-        },
-        "& .MuiInput-underline:hover":{
-            borderBottom: "2px solid #CCC",
-        },
-        "& .MuiSvgIcon-root": {
-            width: "1.2rem",
-            height: "1.2rem",
-            marginRight: 5,
-        },
-        "& .MuiSelect-icon":{
-            color: "white",
-        },
-    },
-    textField: {
-        marginTop: 40,
-        width: 250,
-        "& .MuiFormLabel-root":{
-            color: red[800],
-            fontSize: "1.5rem",
-        },
-        "& label + .MuiInput-formControl":{
-            marginTop: 30,
-        },
-        "& .MuiInputBase-root":{
-            color: "black",
-            backgroundColor: "white",
-            fontSize: "1rem",
-        },
-        "& .MuiInput-underline:before":{
-            borderBottom: "2px solid #CCC",
-        },
-        "& .MuiInput-underline:hover":{
-            borderBottom: "2px solid #CCC",
-        },
     },
     multilineColor:{
         color:'white'
@@ -160,88 +103,6 @@ function getStepContent(stepIndex) {
     }
 }
 
-const BookingLocation=(props)=>{
-    const classes=useStyles();
-    const [location, setLocation] = React.useState("");
-    const [cinema, setCinema] = React.useState("");
-    const [bookingtime, setBookingTime] = React.useState("2021-03-24");
-
-    const {cinemasHN, cinemasHCM} = props;
-
-    const options = (location==20)?
-        cinemasHN.map(
-            (cinema, index)=>(
-                <option value={cinema.cinema_id} key={index}>{cinema.cinema_name}</option>
-            )
-        ):
-        cinemasHCM.map(
-            (cinema, index)=>(
-                <option value={cinema.cinema_id} key={index}>{cinema.cinema_name}</option>
-            )
-        )
-    const handleLocation= (e)=>{
-        setLocation(e.target.value);
-    }
-    const handleCinema= (e)=>{
-        setCinema(e.target.value);
-    }
-    const handleBookingTime= (e)=>{
-        setBookingTime(e.target.value)
-    }
-
-    return(
-        <Box className={classes.bookingFormPlace}>
-            <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="provice">Province</InputLabel>
-                <Select
-                    native
-                    value={location}
-                    onChange={handleLocation}
-                    inputProps={{
-                        name: 'province',
-                        id: 'province',
-                    }}
-                >
-                    <option aria-label="None" value="" />
-                    <option value={10}>Ho Chi Minh</option>
-                    <option value={20}>Ha Noi</option>
-                    <option value={30}>Da Nang</option>
-                </Select>
-            </FormControl>
-            <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="cinema">Cinema</InputLabel>
-                <Select
-                    native
-                    value={cinema}
-                    onChange={handleCinema}
-                    inputProps={{
-                        name: 'cinema',
-                        id: 'cinema',
-                    }}
-                >
-                    <option aria-label="None" value="" />
-                    {options}
-                </Select>
-            </FormControl>
-            <TextField
-                id="date"
-                type="date"
-                defaultValue={bookingtime}
-                className={classes.textField}
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                InputProps={{
-                    className: classes.multilineColor
-                }}
-                variant="filled"
-                color="primary"
-                onChange={handleBookingTime}
-            />
-        </Box>
-    )
-}
-
 const BookingRoom=()=>{
     const classes = useStyles();
     return(
@@ -277,39 +138,80 @@ const BookingRoom=()=>{
     )
 }
 
-export default function HorizontalLabelPositionBelowStepper() {
+export default function HorizontalLabelPositionBelowStepper(props) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
+    const [movie, setMovie] = React.useState({});
+    const [province, setProvince] = React.useState("");
+    const [provinces, setProvinces] = React.useState([]);
+    const [cinema, setCinema] = React.useState("");
+    const [cinemas, setCinemas] = React.useState([]);
+    const [bookingtime, setBookingTime] = React.useState(
+        ()=>{
+            let today = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + dd;
+            return today;
+        }
+    );
     const steps = getSteps();
 
-    const cinemasHCM = [
-        {
-            cinema_id: 1,
-            cinema_name: "Tan Phu"
-        },
-        {
-            cinema_id: 2,
-            cinema_name: "Tan Binh"
-        },
-        {
-            cinema_id: 3,
-            cinema_name: "Phu Nhuan"
-        },
-    ];
-    const cinemasHN = [
-        {
-            cinema_id: 4,
-            cinema_name: "Cau Giay"
-        },
-        {
-            cinema_id: 5,
-            cinema_name: "Dong Da"
-        },
-        {
-            cinema_id: 6,
-            cinema_name: "Ho Guom"
-        },
-    ];
+    const {movieId} = props;
+
+    console.log(province,"province");
+    console.log(cinema,"cinema");
+    console.log(bookingtime,"bookingtime");
+
+
+    async function fetchProvince() {
+        let response = await axios.post(
+            `http://localhost/Cinema/PublicController/GetProvince`
+        );
+        let res = await response.data;
+
+        let responseMovie = await axios.post(
+            `http://localhost/Cinema/Movie/GetMovieItem/${movieId}`
+        );
+        let resMovie = await responseMovie.data;
+        setMovie(resMovie["data"]);
+
+        setProvinces(res["data"]);
+    }
+    console.log(movie);
+
+    async function fetchCinema(cinemaId) {
+        let response = await axios.post(
+            `http://localhost/Cinema/PublicController/GetCinema/${cinemaId}`
+        );
+        let res = await response.data;
+
+        setCinemas(res["data"]);
+    }
+
+    React.useEffect(() => {
+        fetchProvince();
+    },[]);
+
+    const onItemClickLocation = (proviceId)=>{
+        // console.log(proviceId);
+        setProvince(proviceId);
+        fetchCinema(proviceId);
+    }
+
+    const onItemClickCinema = (cinemaId)=>{
+        setCinema(cinemaId);
+        // console.log(cinemaId);
+        // fetchCinema(cinemaId);
+    }
+
+    const onItemClickTime = (NewBookingTime)=>{
+        setBookingTime(NewBookingTime);
+        // console.log(cinemaId);
+        // fetchCinema(cinemaId);
+    }
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -337,7 +239,14 @@ export default function HorizontalLabelPositionBelowStepper() {
                 Choose your tickets
             </Typography>
             <Box className={classes.booking}>
-                <BookingLocation cinemasHN={cinemasHN} cinemasHCM={cinemasHCM}/>
+                <BookingFormLocation
+                    provinces={provinces}
+                    onItemClickLocation={onItemClickLocation}
+                    cinemas={cinemas}
+                    onItemClickCinema={onItemClickCinema}
+                    bookingTime={bookingtime}
+                    onItemClickTime={onItemClickTime}
+                />
                 {
                     (activeStep === 1) ?
                         (
@@ -347,7 +256,23 @@ export default function HorizontalLabelPositionBelowStepper() {
                 }
                 {/*Firm item*/}
                 <Box className={classes.bookingFormFirm}>
-                    <FirmItem />
+                    {
+                        movieId===0 ? (
+                                <FirmItem />
+                            ):
+                            (
+                                <FirmItem
+                                    id={movie.movie_id}
+                                    itemUrl={movie.avatar_url}
+                                    itemName={movie.movie_name}
+                                    showTime={movie.release_date}
+                                    maining={movie.main_type}
+                                    liked={movie.liked}
+                                    // onItemClick={handleOnItemOpeningClick}
+                                />
+                            )
+                    }
+
                 </Box>
             </Box>
                 {/*Stepper*/}
@@ -387,7 +312,6 @@ export default function HorizontalLabelPositionBelowStepper() {
                         </div>
                     )}
                 </div>
-
         </div>
     );
 }

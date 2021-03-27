@@ -10,6 +10,7 @@ import Movies from "./Containers/Movies";
 import Actor from './Containers/Actor';
 import Booking from "./Containers/Booking";
 import Login from "./Containers/Login";
+import Register from "./Containers/Register";
 import Footer from './Components/Footer';
 import Admin from "./Containers/Admin";
 
@@ -31,6 +32,7 @@ function App(props) {
                     <Route path="/Actor/:id" exact component={Actor} />
                     <Route path="/Login/:id" exact component={Login} />
                     <Route path="/Login" exact component={Login} />
+                    <Route path="/Register" exact component={Register} />
                     <Route path="/Booking/:id" exact component={Booking}/>
                     <Route path="/Booking" exact component={Booking}/>
                     <Footer />

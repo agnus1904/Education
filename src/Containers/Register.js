@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Box, Button, Typography} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -55,13 +55,18 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         marginTop: 25,
         alignItems: "center",
+    },
+    btn:{
+        marginTop: 30,
     }
 }));
 
-const Login = (props)=>{
+const Register = (props)=>{
     const classes = useStyles();
     const [user, setUser] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [fullName, setFullName] = React.useState("");
+    const [numberPhone, setNumberPhone] = React.useState("");
     const [time, setTime] = React.useState("");
     const [cookies, setCookie] = useCookies(['name']);
     const [error , setError] = React.useState("");
@@ -69,34 +74,36 @@ const Login = (props)=>{
         {
             customer_email: user,
             customer_password: password,
+            customer_fullname: fullName,
+            customer_number_phone: numberPhone,
         }
     const match = props.match;
 
     async function fetchData() {
-         let response = await axios.post(
-            `http://localhost/Cinema/Login/LoginUser/`, JSON.stringify(data)
+        let response = await axios.post(
+            `http://localhost/Cinema/Customer/Register`, JSON.stringify(data)
         );
 
         let res = await response.data;
         console.log(res);
         if(res.status){
-            setCookie('idLogin', res["customer_id"], { path: '/' });
-            // console.log(cookies["idLogin"]);
-            // props.history.push("/Booking/12")
-            if(match!==""){
-                props.history.push(`/Booking/${
-                    match.params.id ? match.params.id : ""
-                }`);
-            }else{
-                props.history.push(`/`);
-            }
-            setError("");
+            console.log("done");
+            // setCookie('idLogin', res["customer_id"], { path: '/' });
+            // // console.log(cookies["idLogin"]);
+            // // props.history.push("/Booking/12")
+            // if(match!==""){
+            //     props.history.push(`/Booking/${match.params.id}`);
+            // }else{
+            //     props.history.push(`/`);
+            // }
+            setError("Register Successful");
         }
         else{
             setError(res.error);
         }
-        // console.log(res.error);
     }
+
+
 
     const handleForm= (e)=>{
         if( e.key === "Enter" || e.target.value==="submit"){
@@ -113,22 +120,25 @@ const Login = (props)=>{
         setPassword(e.target.value)
     }
 
-    const handleChangeTime= (e)=>{
-        setTime(e.target.value);
-        console.log(e.target.value);
+    const handleChangeFullName= (e)=>{
+        setFullName(e.target.value)
+    }
+
+    const handleChangeNumberPhone= (e)=>{
+        setNumberPhone(e.target.value)
+        console.log(data);
     }
 
     return(
         <Box style={{minHeight: "100vh"}} className={classes.root}>
             <br/><br/><br/><br/><br/>
-
             <form
                 className={classes.form}
                 noValidate autoComplete="off"
                 onKeyDown={handleForm}
             >
                 <Typography variant="h2" color="primary">
-                    Login
+                    Register
                 </Typography>
                 <Typography variant="h5" color="error">
                     {error}
@@ -147,24 +157,39 @@ const Login = (props)=>{
                            InputLabelProps={{className: classes.label}}
                            InputProps={{className: classes.input}}
                 />
+                <TextField label="Full Name"
+                           value={fullName}
+                           onChange={handleChangeFullName}
+                           className={classes.inputTextField}
+                           InputLabelProps={{className: classes.label}}
+                           InputProps={{className: classes.input}}
+                />
+                <TextField label="Number Phone"
+                           value={numberPhone}
+                           onChange={handleChangeNumberPhone}
+                           className={classes.inputTextField}
+                           InputLabelProps={{className: classes.label}}
+                           InputProps={{className: classes.input}}
+                />
                 <Button type="button"
                         variant="contained"
                         color="primary"
                         value="submit"
+                        className={classes.btn}
                         onClick={handleForm}>submit</Button>
-                <Typography className={classes.register}
-                            variant="h5" color="primary">
-                    Don't have an account
-                    <Button type="button"
-                       variant="contained"
-                       color="primary"
-                       value="submit"
-                        href="/Register"
-                    >Click here</Button>
-                </Typography>
+                {/*<Typography className={classes.register}*/}
+                {/*            variant="h5" color="primary">*/}
+                {/*    Don't have an account*/}
+                {/*    <Button type="button"*/}
+                {/*            variant="contained"*/}
+                {/*            color="primary"*/}
+                {/*            value="submit"*/}
+                {/*            href="/"*/}
+                {/*    >Click here</Button>*/}
+                {/*</Typography>*/}
             </form>
         </Box>
     );
 }
 
-export default Login;
+export default Register;
