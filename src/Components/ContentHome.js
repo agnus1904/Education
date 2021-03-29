@@ -54,18 +54,6 @@ const ContentHome = ()=>{
     },[]);
 
 
-    const handleOnItemOpeningClick = (id)=> {
-        let findFirmItem = itemsOpening.find(
-            firmItems=>(parseInt(firmItems.movie_id) === id));
-        let newFirmItem ={...findFirmItem};
-        let index = itemsOpening.findIndex(x => x.movie_id === findFirmItem.movie_id);
-        newFirmItem.liked = newFirmItem.liked==="0" ? "1" : "0";
-        // console.log(newFirmItem.liked, itemsOpening[index].liked);
-        let newFirmItems = [...itemsOpening];
-        newFirmItems[index] = newFirmItem;
-        //
-        setItemsOpening(newFirmItems);
-    }
 
     const itemsTop = (itemsOpening===[] ?
         (<Typography variant="h4" color="primary" >
@@ -75,33 +63,11 @@ const ContentHome = ()=>{
         itemsOpening.map(
             (item, index)=>(
                 <FirmItem
-                    id={item.movie_id}
-                    itemUrl={item.avatar_url}
-                    itemName={item.movie_name}
-                    showTime={item.release_date}
-                    maining={item.main_type}
-                    liked={item.liked}
+                    movieId={item.movie_id}
                     key={index}
-                    onItemClick={handleOnItemOpeningClick}
                 />
             )
         ));
-
-
-
-    const handleOnItemComingClick = (id)=> {
-        let findFirmItem = itemsComing.find(
-            firmItems=>(parseInt(firmItems.movie_id) === id));
-        let newFirmItem ={...findFirmItem};
-
-        let index = itemsComing.findIndex(x => x.movie_id === findFirmItem.movie_id);
-        newFirmItem.liked = newFirmItem.liked==="0" ? "1" : "0";
-        // console.log(newFirmItem.liked, itemsOpening[index].liked);
-        let newFirmItems = [...itemsComing];
-        newFirmItems[index] = newFirmItem;
-        //
-        setItemsComing(newFirmItems);
-    }
 
     const itemsBottom = (itemsComing===[] ?
         (<Typography variant="h4" color="primary" >
@@ -111,14 +77,8 @@ const ContentHome = ()=>{
         itemsComing.map(
             (item, index)=>(
                 <FirmItem
-                    id={item.movie_id}
-                    itemUrl={item.avatar_url}
-                    itemName={item.movie_name}
-                    showTime={item.release_date}
-                    maining={item.main_type}
-                    liked={item.liked}
+                    movieId={item.movie_id}
                     key={index}
-                    onItemClick={handleOnItemComingClick}
                 />
             )
         ));

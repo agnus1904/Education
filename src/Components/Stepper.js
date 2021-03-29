@@ -56,23 +56,32 @@ const useStyles = makeStyles((theme) => ({
     bookingFormRoom:{
         paddingTop: 30,
         paddingLeft: 20,
-        width: 350,
+        width: 400,
         "& .MuiButton-root":{
-            marginRight: 5,
-            marginBottom: 8,
+            marginRight: 10,
+            marginBottom: 10,
+        },
+        "& .MuiButton-label":{
+            // textTransform: "none",
         }
     },
     headerRoom: {
         color: red[800],
-        borderBottom: "2px solid white",
-        marginTop: 5,
-        marginBottom: 10,
-        width: 100,
-        paddingBottom: 5,
+        // marginTop: 5,
+        // marginBottom: 10,
+        // paddingBottom: 5,
     },
     bookingFormFirm:{
-        width: 300,
+        // width: 300,
         // backgroundColor: "white",
+    },
+    btnLogOut:{
+        cursor: "pointer",
+        paddingLeft: 15,
+        paddingRight: 15,
+        "&:hover":{
+            backgroundColor: "#cacaca",
+        }
     }
 }));
 
@@ -103,37 +112,55 @@ function getStepContent(stepIndex) {
     }
 }
 
-const BookingRoom=()=>{
+const BookingRoom=(props)=>{
     const classes = useStyles();
+    const [showTimeRoom, setShowTimeRoom] = React.useState([]);
+    const {
+        cinema_id,
+        booking_time,
+        movie_id
+    }= props;
+
+    console.log("booking room render", cinema_id, booking_time, movie_id);
+
+    async function fetchShowTimeRoom(cinemaId) {
+        let response = await axios.post(
+            `http://localhost/Cinema/PublicController/GetShowTime/
+            ${cinema_id}/
+            ${movie_id}/
+            ${booking_time}
+            `
+        );
+        let res = await response.data;
+
+        setShowTimeRoom(res["data"]);
+    };
+
+    console.log(showTimeRoom);
+
+    React.useEffect(() => {
+        fetchShowTimeRoom();
+    },[]);
+    var roomName="";
     return(
         <Box className={classes.bookingFormRoom}>
-            <Typography variant="h4" className={classes.headerRoom}>
-                Room1
-            </Typography>
-            <Box>
-                <Button variant="contained">06:30</Button>
-                <Button variant="contained">12:00</Button>
-                <Button variant="contained">16:30</Button>
-                <Button variant="contained">19:30</Button>
-            </Box>
-            <Typography variant="h4" className={classes.headerRoom}>
-                Room2
-            </Typography>
-            <Box>
-                <Button variant="contained">06:30</Button>
-                <Button variant="contained">12:00</Button>
-                <Button variant="contained">16:30</Button>
-            </Box>
-            <Typography variant="h4" className={classes.headerRoom}>
-                Room3
-            </Typography>
-            <Box>
-                <Button variant="contained">06:30</Button>
-                <Button variant="contained">12:00</Button>
-                <Button variant="contained">16:30</Button>
-                <Button variant="contained">19:30</Button>
-                <Button variant="contained">22:00</Button>
-            </Box>
+            {
+
+                showTimeRoom.map(
+                    (room, index)=>
+                        (
+                            <React.Fragment key={index}>
+                                <Button variant="contained">
+                                    <Typography variant="h4" className={classes.headerRoom}>
+                                        {room.room_name} &nbsp;
+                                    </Typography>
+                                    {
+                                    room.show_time_date.slice(-8,-3)
+                                }</Button>
+                            </React.Fragment>
+                        )
+                )
+            }
         </Box>
     )
 }
@@ -141,7 +168,6 @@ const BookingRoom=()=>{
 export default function HorizontalLabelPositionBelowStepper(props) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
-    const [movie, setMovie] = React.useState({});
     const [province, setProvince] = React.useState("");
     const [provinces, setProvinces] = React.useState([]);
     const [cinema, setCinema] = React.useState("");
@@ -159,11 +185,15 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     );
     const steps = getSteps();
 
-    const {movieId} = props;
+    const {
+        movieId
+    } = props;
 
-    console.log(province,"province");
-    console.log(cinema,"cinema");
-    console.log(bookingtime,"bookingtime");
+    console.log("stepper render");
+    console.log(province,"province",
+        bookingtime,"bookingtime",
+        cinema,"cinema"
+        ,movieId, "movie id");
 
 
     async function fetchProvince() {
@@ -172,15 +202,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         );
         let res = await response.data;
 
-        let responseMovie = await axios.post(
-            `http://localhost/Cinema/Movie/GetMovieItem/${movieId}`
-        );
-        let resMovie = await responseMovie.data;
-        setMovie(resMovie["data"]);
-
         setProvinces(res["data"]);
     }
-    console.log(movie);
 
     async function fetchCinema(cinemaId) {
         let response = await axios.post(
@@ -196,21 +219,16 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     },[]);
 
     const onItemClickLocation = (proviceId)=>{
-        // console.log(proviceId);
         setProvince(proviceId);
         fetchCinema(proviceId);
     }
 
     const onItemClickCinema = (cinemaId)=>{
         setCinema(cinemaId);
-        // console.log(cinemaId);
-        // fetchCinema(cinemaId);
     }
 
     const onItemClickTime = (NewBookingTime)=>{
         setBookingTime(NewBookingTime);
-        // console.log(cinemaId);
-        // fetchCinema(cinemaId);
     }
 
     const handleNext = () => {
@@ -235,9 +253,22 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                     </Step>
                 ))}
             </Stepper>
-            <Typography variant="h2">
-                Choose your tickets
-            </Typography>
+            <Box display="flex" justifyContent="space-between" mr={3} >
+                <Typography variant="h2">
+                    Choose your tickets
+
+                </Typography>
+                {/*account name*/}
+                <Box>
+                    <Typography
+                        // style={{color:""}}
+                        variant="h4"
+                        color="error"
+                    >
+                        Ha Anh Khoa
+                    </Typography>
+                </Box>
+            </Box>
             <Box className={classes.booking}>
                 <BookingFormLocation
                     provinces={provinces}
@@ -251,28 +282,18 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                     (activeStep === 1) ?
                         (
                             // choose room and time
-                            <BookingRoom/>
+                            <BookingRoom
+                                cinema_id={cinema}
+                                booking_time={bookingtime}
+                                movie_id={movieId}
+                            />
                         ) : ""
                 }
                 {/*Firm item*/}
                 <Box className={classes.bookingFormFirm}>
-                    {
-                        movieId===0 ? (
-                                <FirmItem />
-                            ):
-                            (
-                                <FirmItem
-                                    id={movie.movie_id}
-                                    itemUrl={movie.avatar_url}
-                                    itemName={movie.movie_name}
-                                    showTime={movie.release_date}
-                                    maining={movie.main_type}
-                                    liked={movie.liked}
-                                    // onItemClick={handleOnItemOpeningClick}
-                                />
-                            )
-                    }
-
+                    <FirmItem
+                        movieId={movieId}
+                    />
                 </Box>
             </Box>
                 {/*Stepper*/}

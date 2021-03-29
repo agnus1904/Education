@@ -28,6 +28,7 @@ const Movie = ({match})=>{
         <>
             {/* Banner */}
             <Banner
+                id={match.params.id}
                 url={
                     ( movie.banner_url ||movie.banner_url===null) ?
                         movie.banner_url : ""}

@@ -10,6 +10,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import axios from "axios";
 
 
 const useStyles = makeStyles((theme)=>({
@@ -67,16 +68,28 @@ const useStyles = makeStyles((theme)=>({
 }));
 
 const FirmItem =  React.memo((props)=>{
-  const classes = useStyles();
-  const {
-      id,
-      itemUrl,
-      itemName,
-      showTime,
-      liked,
-      maining,
-      onItemClick,
-  } = props;
+
+    const classes = useStyles();
+    const [item, setItem] = React.useState({});
+    // console.log(item, "item render");
+    const {
+        movieId,
+    } = props;
+
+    async function fetchItem(){
+      let response = await axios(
+          `http://localhost/Cinema/Movie/GetMovieItem/${movieId}`
+      );
+      let resItem = await response.data.data;
+      // console.log(resItem, "response");
+      setItem(resItem);
+  }
+
+  React.useEffect(
+      ()=>{
+          fetchItem();
+      },[]
+  )
 
     const scrollToTop= ()=> {
         window.scrollTo({
@@ -84,22 +97,14 @@ const FirmItem =  React.memo((props)=>{
             behavior: "smooth"
         });
     }
-    const idNumber = parseInt(id);
-    const likedNumber = parseInt(liked)
-    // console.log("item redner")
-    // console.log(idNumber,"idnum");
 
   return (
         <Card className={classes.root}>
-            <Link to={(idNumber!==0)? `/movie/${idNumber}` : "/"} onClick={scrollToTop}>
+            <Link to={(movieId!=="0")? `/movie/${movieId}` : "/"} onClick={scrollToTop}>
                 <CardActionArea className={classes.actionArea} component="div">
                     <CardMedia
                         className={classes.media}
-                        image={
-                            (!itemUrl || itemUrl==="") ?
-                                FirmItem.defaultProps.itemUrl
-                                : itemUrl
-                        }
+                        image={item.avatar_url}
                         title="Contemplative Reptile"
                     />
                     <Box className={classes.overplay}>
@@ -113,30 +118,22 @@ const FirmItem =  React.memo((props)=>{
                 <Box display="flex" width="100%">
                     <Box flexGrow={4} >
                         <Typography variant='h6' mb={1} style={{margin: "15px 0 10px 0"}}>
-                            {
-                                (!itemName || itemName==="") ?
-                                    FirmItem.defaultProps.itemName
-                                    : itemName
-                            } <br/>
+                            {item.movie_name} <br/>
                         </Typography>
                         <Typography variant="subtitle2" color="secondary">
-                            {showTime}
+                            {item.duration}&nbsp;MIN
                             &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
-                            {
-                                (!maining || maining==="") ?
-                                    FirmItem.defaultProps.maining
-                                    : maining
-                            }
+                            {item.main_type}
                         </Typography>
                     </Box>
                     <Box flexGrow={1} display="flex" justifyContent="flex-end" pt="15px">
                             <FavoriteIcon className={classes.icon}
-                                color={ likedNumber ? "error" : "disabled"}
-                                onClick={
-                                    ()=>{
-                                        onItemClick(idNumber);
-                                    }
-                                }
+                                color={ item.liked==="1" ? "error" : "disabled"}
+                                // onClick={
+                                //     ()=>{
+                                //         onItemClick(idNumber);
+                                //     }
+                                // }
                             />
                     </Box>
                 </Box>
@@ -148,22 +145,10 @@ const FirmItem =  React.memo((props)=>{
 
 FirmItem.propTypes= {
     id: PropTypes.string,
-    itemUrl: PropTypes.string,
-    itemName: PropTypes.string,
-    showTime: PropTypes.string,
-    maining: PropTypes.string,
-    liked: PropTypes.string,
-    onItemClick : PropTypes.func,
 }
 
 FirmItem.defaultProps = {
     id: "0",
-    itemUrl: "http://localhost/Cinema/Public/Imgs/firm_small/movie_small_default.png",
-    itemName: "Not found",
-    showTime: "Not found",
-    maining: "NOT FOUND",
-    liked: "0",
-    onItemClick : null,
 }
 
 export default FirmItem;

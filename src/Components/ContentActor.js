@@ -148,18 +148,6 @@ const ContentActor = React.memo((props)=>{
     //     newFirmItems[index] = newFirmItem;
     //     setmovieItems(newFirmItems);
     // }
-    const handleOnItemClick = (id)=> {
-        let findFirmItem = movieItems.find(
-            firmItems=>(parseInt(firmItems.movie_id) === id));
-        let newFirmItem ={...findFirmItem};
-        let index = movieItems.findIndex(x => x.movie_id === findFirmItem.movie_id);
-        newFirmItem.liked = newFirmItem.liked==="0" ? "1" : "0";
-        // console.log(newFirmItem.liked, itemsOpening[index].liked);
-        let newFirmItems = [...movieItems];
-        newFirmItems[index] = newFirmItem;
-        //
-        setmovieItems(newFirmItems);
-    }
 
 
     const itemsTop = (
@@ -171,21 +159,13 @@ const ContentActor = React.memo((props)=>{
         movieItems.map(
             (item, index)=>(
                 <FirmItem
-                    id={item.movie_id}
-                    itemUrl={item.avatar_url}
-                    itemName={item.movie_name}
-                    showTime={item.release_date}
-                    maining={item.main_type}
-                    liked={item.liked}
+                    movieId={item.movie_id}
                     key={index}
-                    onItemClick={handleOnItemClick}
                 />
             )
         ));
 
-
     const avatarSubs =
-
         (actorImages===[]) ? (<Typography variant="h4" color="primary" >
                 No Img
             </Typography>) :

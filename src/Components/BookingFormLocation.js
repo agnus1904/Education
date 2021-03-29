@@ -91,8 +91,6 @@ const BookingFormLocation =(props)=>{
         bookingTime,
     } = props;
 
-    // setBookingtime(bookingTime);
-
     const handleLocation= (e)=>{
         setLocation(e.target.value);
         onItemClickLocation(e.target.value);
@@ -106,7 +104,6 @@ const BookingFormLocation =(props)=>{
         onItemClickTime(e.target.value);
     }
 
-    console.log("booking render");
 
     return(
         <Box className={classes.bookingFormPlace}>

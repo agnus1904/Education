@@ -73,11 +73,13 @@ const Booking = (props)=> {
                 <Stepper movieId={
                     props.match.params.id ? props.match.params.id : 0
                 }/>
-                <button type="button" onClick={handleLogOut} >Logout</button>
             </Box>
         )
     }
-
 }
 
 export default Booking;
+
+
+
+
