@@ -68,13 +68,18 @@ const Booking = (props)=> {
             <Box className={classes.root}></Box>
         )
     }else{
-        return(
-            <Box className={classes.root}>
-                <Stepper movieId={
-                    props.match.params.id ? props.match.params.id : 0
-                }/>
-            </Box>
-        )
+        if(props.match.params.id){
+            return(
+                <Box className={classes.root}>
+                    <Stepper movieId={
+                        props.match.params.id ? props.match.params.id : 0
+                    }/>
+                </Box>
+            )
+        }else{
+            props.history.push("/Movies");
+            return 0;
+        }
     }
 }
 

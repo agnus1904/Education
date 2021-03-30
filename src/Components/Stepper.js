@@ -11,6 +11,7 @@ import {Box, FormControl, InputLabel, Select, TextField} from "@material-ui/core
 import FirmItem from "./FirmItem";
 import BookingFormLocation from "./BookingFormLocation";
 import axios from "axios";
+import {object} from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -137,6 +138,20 @@ const BookingRoom=(props)=>{
     };
 
     console.log(showTimeRoom);
+
+//     const newShowTimeRoom = showTimeRoom.map(
+//         (item, index)=>{
+// [id][object]
+//         }
+//     );[][]
+
+
+
+    // for(let i=0; i===showTimeRoom.length; i++){
+    //     if(showTimeRoom[i].room_id===showTimeRoom[i-1].room_id){
+    //
+    //     }
+    // }
 
     React.useEffect(() => {
         fetchShowTimeRoom();

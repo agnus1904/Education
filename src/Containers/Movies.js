@@ -28,11 +28,16 @@ const useStyles = makeStyles((theme) => ({
         justifyItems: "flex-start",
         width: "100%",
     },
+    form:{
+        display: "flex",
+        width: "100%",
+        justifyContent: "space-between",
+    },
     inputTextField:{
         borderBottom: "2px solid white",
         marginTop: 20,
         marginLeft: 10,
-        width: 200,
+        width: 350,
     },
 
     label:{
@@ -122,8 +127,12 @@ const Movies = ()=>{
         setInputOpening(e.target.value);
     }
 
-    const handleForm= ()=>{
+    const handleForm= (e)=>{
+        e.preventDefault();
             // console.log("form submited", user, password);
+        if( e.key === "Enter" || e.target.value==="submit"){
+            // console.log("form submited", user, password);
+        }
         if(inputOpening!==""){
             fetchNewOpening();
         }else {
@@ -156,9 +165,10 @@ const Movies = ()=>{
             <form
                 className={classes.form}
                 noValidate autoComplete="off"
+                onSubmit={handleForm}
             >
                 <TextField
-                    label="your e-mail"
+                    label="Input Name"
                     className={classes.inputTextField}
                     InputLabelProps={{className: classes.label}}
                     InputProps={{className: classes.input}}

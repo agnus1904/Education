@@ -99,6 +99,7 @@ const Login = (props)=>{
     }
 
     const handleForm= (e)=>{
+        e.preventDefault();
         if( e.key === "Enter" || e.target.value==="submit"){
             // console.log("form submited", user, password);
             fetchData();

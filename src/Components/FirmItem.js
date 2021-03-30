@@ -5,7 +5,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { Box } from '@material-ui/core';
+import {Box, CircularProgress, TextField} from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme)=>({
 const FirmItem =  React.memo((props)=>{
 
     const classes = useStyles();
-    const [item, setItem] = React.useState({});
+    const [item, setItem] = React.useState(null);
     const [like, setlike] = React.useState(null);
     // console.log(item, "item render");
     const {
@@ -99,64 +99,90 @@ const FirmItem =  React.memo((props)=>{
           fetchItem();
       },[]
   )
+    React.useEffect(
+        ()=>{
+            fetchItem();
+        },[movieId]
+    )
     const scrollToTop= ()=> {
         window.scrollTo({
             top: 0,
             behavior: "smooth"
         });
     }
-
-  return (
-        <Card className={classes.root}>
-            <Link to={(movieId!=="0")? `/movie/${movieId}` : "/"} onClick={scrollToTop}>
-                <CardActionArea className={classes.actionArea} component="div">
-                    <CardMedia
-                        component="img"
-                        height="140"
-                        className={classes.media}
-                        image={item.avatar_url}
-                        title="Contemplative Reptile"
-                    />
-                    <Box className={classes.overplay}>
-                        <PlayCircleFilledIcon
-                            className={classes.overplayIcon}
+    // if(item==={}){
+    //     return(<>abcd</>)
+    // }else
+    // {
+    console.log(item);
+    if(!item){
+        return(<CircularProgress color="secondary" />);
+    }else {
+        return (
+            <Card className={classes.root}>
+                <Link to={(movieId !== "0") ? `/movie/${movieId}` : "/"} onClick={scrollToTop}>
+                    <CardActionArea className={classes.actionArea} component="div">
+                        <CardMedia
+                            component="img"
+                            height="140"
+                            className={classes.media}
+                            image={
+                                item !== {} ?
+                                    item.avatar_url : ""
+                            }
+                            title="Contemplative Reptile"
                         />
+                        <Box className={classes.overplay}>
+                            <PlayCircleFilledIcon
+                                className={classes.overplayIcon}
+                            />
+                        </Box>
+                    </CardActionArea>
+                </Link>
+                <CardActions className={classes.action}>
+                    <Box display="flex" width="100%">
+                        <Box flexGrow={4}>
+                            <Typography variant='h6' mb={1} style={{margin: "15px 0 10px 0"}}>
+                                {
+                                    item ?
+                                        item.movie_name : ""
+                                } <br/>
+                            </Typography>
+                            <Typography variant="subtitle2" color="secondary">
+                                {
+                                    item ?
+                                        item.duration : ""
+                                }&nbsp;MIN
+                                &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
+                                {
+                                    item ?
+                                        item.main_type : ""
+                                }
+                            </Typography>
+                        </Box>
+                        <Box flexGrow={1} display="flex" justifyContent="flex-end" pt="15px">
+                            {
+                                like ? (
+                                    // <>abcd</>
+                                    <FavoriteIcon className={classes.icon}
+                                                  color={like === "1" ? "error" : "disabled"}
+                                        // onClick={
+                                        //     ()=>{
+                                        //         onItemClick(idNumber);
+                                        //     }
+                                        // }
+                                    />
+                                ) : (
+                                    <FavoriteIcon className={classes.icon} color="disabled"/>
+                                )
+                            }
+                        </Box>
                     </Box>
-                </CardActionArea>
-            </Link>
-            <CardActions className={classes.action}>
-                <Box display="flex" width="100%">
-                    <Box flexGrow={4} >
-                        <Typography variant='h6' mb={1} style={{margin: "15px 0 10px 0"}}>
-                            {item.movie_name} <br/>
-                        </Typography>
-                        <Typography variant="subtitle2" color="secondary">
-                            {item.duration}&nbsp;MIN
-                            &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
-                            {item.main_type}
-                        </Typography>
-                    </Box>
-                    <Box flexGrow={1} display="flex" justifyContent="flex-end" pt="15px">
-                        {
-                            like ? (
-                                // <>abcd</>
-                                <FavoriteIcon className={classes.icon}
-                                    color={like==="1" ? "error" : "disabled"}
-                                    // onClick={
-                                    //     ()=>{
-                                    //         onItemClick(idNumber);
-                                    //     }
-                                    // }
-                                />
-                            ) : (
-                                <FavoriteIcon className={classes.icon} color="disabled" />
-                            )
-                        }
-                    </Box>
-                </Box>
-            </CardActions>
-        </Card>
-  );
+                </CardActions>
+            </Card>
+        )
+    }
+    // }
 })
 
 
