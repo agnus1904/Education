@@ -36,12 +36,12 @@ const ContentHome = ()=>{
 
     async function fetchData() {
         let responseOpening = await axios(
-            `http://localhost/Cinema/Movie/GetMovieItemsSortByView/8`
+            `http://localhost/Cinema/Movie/GetMovieItemsSortByViewOpening/8`
         );
         let dataListOpening = await responseOpening.data;
 
         let responseComing = await axios(
-            `http://localhost/Cinema/Movie/GetMovieItemsSortByView/4`
+            `http://localhost/Cinema/Movie/GetMovieItemsSortByViewComing/4`
         );
         let dataListComing = await responseComing.data;
 
@@ -52,7 +52,6 @@ const ContentHome = ()=>{
     React.useEffect(() => {
         fetchData();
     },[]);
-
 
 
     const itemsTop = (itemsOpening===[] ?

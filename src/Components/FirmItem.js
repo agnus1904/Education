@@ -71,9 +71,11 @@ const FirmItem =  React.memo((props)=>{
 
     const classes = useStyles();
     const [item, setItem] = React.useState({});
+    const [like, setlike] = React.useState(null);
     // console.log(item, "item render");
     const {
         movieId,
+        customer_id,
     } = props;
 
     async function fetchItem(){
@@ -81,16 +83,22 @@ const FirmItem =  React.memo((props)=>{
           `http://localhost/Cinema/Movie/GetMovieItem/${movieId}`
       );
       let resItem = await response.data.data;
-      // console.log(resItem, "response");
+
+      let responseLike = await axios(
+          `http://localhost/Cinema/Movie/GetMovieLike/1/${movieId}`
+      );
+
+      let resLike = await responseLike.data.data;
+      // console.log(resLike.like, "movie_like", movieId);
       setItem(resItem);
-  }
+      setlike(resLike.like);
+    }
 
   React.useEffect(
       ()=>{
           fetchItem();
       },[]
   )
-
     const scrollToTop= ()=> {
         window.scrollTo({
             top: 0,
@@ -103,6 +111,8 @@ const FirmItem =  React.memo((props)=>{
             <Link to={(movieId!=="0")? `/movie/${movieId}` : "/"} onClick={scrollToTop}>
                 <CardActionArea className={classes.actionArea} component="div">
                     <CardMedia
+                        component="img"
+                        height="140"
                         className={classes.media}
                         image={item.avatar_url}
                         title="Contemplative Reptile"
@@ -127,14 +137,21 @@ const FirmItem =  React.memo((props)=>{
                         </Typography>
                     </Box>
                     <Box flexGrow={1} display="flex" justifyContent="flex-end" pt="15px">
-                            <FavoriteIcon className={classes.icon}
-                                color={ item.liked==="1" ? "error" : "disabled"}
-                                // onClick={
-                                //     ()=>{
-                                //         onItemClick(idNumber);
-                                //     }
-                                // }
-                            />
+                        {
+                            like ? (
+                                // <>abcd</>
+                                <FavoriteIcon className={classes.icon}
+                                    color={like==="1" ? "error" : "disabled"}
+                                    // onClick={
+                                    //     ()=>{
+                                    //         onItemClick(idNumber);
+                                    //     }
+                                    // }
+                                />
+                            ) : (
+                                <FavoriteIcon className={classes.icon} color="disabled" />
+                            )
+                        }
                     </Box>
                 </Box>
             </CardActions>

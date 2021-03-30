@@ -1,8 +1,10 @@
 import React from "react";
-import {Box, Typography} from "@material-ui/core";
+import {Box, Button, TextField, Typography} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios";
 import FirmItem from "../Components/FirmItem";
+import { red } from '@material-ui/core/colors';
+
 
 const useStyles = makeStyles((theme) => ({
     root:{
@@ -26,6 +28,29 @@ const useStyles = makeStyles((theme) => ({
         justifyItems: "flex-start",
         width: "100%",
     },
+    inputTextField:{
+        borderBottom: "2px solid white",
+        marginTop: 20,
+        marginLeft: 10,
+        width: 200,
+    },
+
+    label:{
+        color: red[800],
+        fontSize: theme.typography.h5.fontSize,
+        "&.MuiFormLabel-colorSecondary.Mui-focused":{
+            color: red[800],
+        },
+    },
+    input:{
+        color: "white",
+        fontSize: theme.typography.h5.fontSize,
+        paddingBottom: 5,
+
+    },
+    searchBtn:{
+        marginTop: 20,
+    }
 }));
 
 
@@ -35,21 +60,31 @@ const Movies = ()=>{
 
     const [itemsOpening, setItemsOpening] = React.useState([])
     const [itemsComing, setItemsComing] = React.useState([])
-
+    const [inputOpening, setInputOpening] = React.useState("")
+    const [inputComing, setInputComing] = React.useState("")
 
     async function fetchData() {
         let responseOpening = await axios(
-            `http://localhost/Cinema/Movie/GetMovieItemsSortByView/8`
+            `http://localhost/Cinema/Movie/GetMovieItemsSortByViewOpening/8`
         );
         let dataListOpening = await responseOpening.data;
 
         let responseComing = await axios(
-            `http://localhost/Cinema/Movie/GetMovieItemsSortByView/4`
+            `http://localhost/Cinema/Movie/GetMovieItemsSortByViewComing/4`
         );
         let dataListComing = await responseComing.data;
 
         dataListOpening["data"] ? setItemsOpening(dataListOpening["data"]) : setItemsOpening([]);
         dataListComing["data"]? setItemsComing(dataListComing["data"]) : setItemsComing([]);
+    }
+
+    async function fetchNewOpening(){
+        let responseOpening = await axios(
+            `http://localhost/Cinema/Movie/GetMovieItemsSortByViewAndNameOpening/8/${inputOpening}`
+        );
+        let dataListOpening = await responseOpening.data;
+
+        dataListOpening["data"] ? setItemsOpening(dataListOpening["data"]) : setItemsOpening([]);
     }
 
     React.useEffect(() => {
@@ -67,20 +102,6 @@ const Movies = ()=>{
     //     newFirmItems[index] = newFirmItem;
     //     setItemsOpening(newFirmItems);
     // }
-
-    const itemsTop = (itemsOpening==[] ?
-        (<Typography variant="h4" color="primary" >
-            <br/><br/>
-            No Firm
-        </Typography>) :
-        itemsOpening.map(
-            (item, index)=>(
-                <FirmItem
-                    movieId={item.movie_id}
-                    key={index}
-                />
-            )
-        ));
     //
     // const handleOnItemComingClick = (id)=> {
     //     let findFirmItem = itemsComing.find(
@@ -95,6 +116,22 @@ const Movies = ()=>{
     //     //
     //     setItemsComing(newFirmItems);
     // }
+
+    console.log(itemsOpening, "this is item opening");
+    const handleOpeningChange = (e)=>{
+        setInputOpening(e.target.value);
+    }
+
+    const handleForm= ()=>{
+            // console.log("form submited", user, password);
+        if(inputOpening!==""){
+            fetchNewOpening();
+        }else {
+            fetchData();
+        }
+    }
+    // console.log(itemsTop);
+
 
     const itemsBottom = (itemsComing===[] ?
         (<Typography variant="h4" color="primary" >
@@ -116,8 +153,42 @@ const Movies = ()=>{
             <Typography variant="h1" color="primary" className={classes.header}>
                 Opening this week
             </Typography>
+            <form
+                className={classes.form}
+                noValidate autoComplete="off"
+            >
+                <TextField
+                    label="your e-mail"
+                    className={classes.inputTextField}
+                    InputLabelProps={{className: classes.label}}
+                    InputProps={{className: classes.input}}
+                    color="secondary"
+                    value={inputOpening}
+                    onChange={handleOpeningChange}
+                />
+                <Button type="button"
+                        variant="contained"
+                        color="primary"
+                        value="submit"
+                        className={classes.searchBtn}
+                        onClick={handleForm}>Search</Button>
+            </form>
             <Box mt={4} mb={10} className={classes.top}>
-                {itemsTop}
+                {
+                    itemsOpening===[] ?
+                        (<Typography variant="h4" color="primary" >
+                            <br/><br/>
+                            No Firm
+                        </Typography>) :
+                        itemsOpening.map(
+                            (item, index)=>(
+                                <FirmItem
+                                    movieId={item.movie_id}
+                                    key={index}
+                                />
+                            )
+                        )
+                }
             </Box>
             <Typography variant="h1" color="primary" className={classes.header}>
                 Coming soon
