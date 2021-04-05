@@ -12,6 +12,7 @@ import FirmItem from "./FirmItem";
 import BookingFormLocation from "./BookingFormLocation";
 import axios from "axios";
 import {object} from "prop-types";
+import BookingChooseSeat from "./BookingChooseSeat";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -68,9 +69,11 @@ const useStyles = makeStyles((theme) => ({
     },
     headerRoom: {
         color: red[800],
-        // marginTop: 5,
-        // marginBottom: 10,
-        // paddingBottom: 5,
+        marginTop: 5,
+        marginBottom: 15,
+        paddingBottom: 5,
+        borderBottom: "2px solid white",
+        width: "50%",
     },
     bookingFormFirm:{
         // width: 300,
@@ -97,17 +100,24 @@ const ColorButton = withStyles((theme) => ({
 }))(Button);
 
 function getSteps() {
-    return ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad'];
+    return [
+        'Choose Location and Date',
+        'Choose Time',
+        'Choose Seat',
+        'Payment'
+    ];
 }
 
 function getStepContent(stepIndex) {
     switch (stepIndex) {
         case 0:
-            return 'Select campaign settings...';
+            return 'Choose province, cinema and the day you want to go';
         case 1:
-            return 'What is an ad group anyways?';
+            return 'Choose the time in the room you want to watch in';
         case 2:
-            return 'This is the bit I really care about!';
+            return 'Choose seats you want to sit in';
+        case 3:
+            return 'You must pay to get the ticket';
         default:
             return 'Unknown stepIndex';
     }
@@ -116,6 +126,7 @@ function getStepContent(stepIndex) {
 const BookingRoom=(props)=>{
     const classes = useStyles();
     const [showTimeRoom, setShowTimeRoom] = React.useState([]);
+    const [group, setGroup] = React.useState([]);
     const {
         cinema_id,
         booking_time,
@@ -133,49 +144,40 @@ const BookingRoom=(props)=>{
             `
         );
         let res = await response.data;
-
         setShowTimeRoom(res["data"]);
-    };
-
-    console.log(showTimeRoom);
-
-//     const newShowTimeRoom = showTimeRoom.map(
-//         (item, index)=>{
-// [id][object]
-//         }
-//     );[][]
-
-
-
-    // for(let i=0; i===showTimeRoom.length; i++){
-    //     if(showTimeRoom[i].room_id===showTimeRoom[i-1].room_id){
-    //
-    //     }
-    // }
+        let change = res["data"].reduce((r, a) => {
+            r[a.room_name] = [...r[a.room_name] || [], a];
+            return r;
+        }, {});
+        setGroup(change);
+    }
 
     React.useEffect(() => {
         fetchShowTimeRoom();
     },[]);
-    var roomName="";
+    let room=[];
+        Object.entries(group).forEach(([key, value]) =>{
+            room.push(
+            <Box key={key}>
+                <Typography variant="h4" className={classes.headerRoom}>
+                    {key}
+                </Typography>
+                {
+                    value.map(
+                        (item, index)=>(
+                            <Button variant="contained" key={index}>
+                                {item.show_time_date.slice(-8,-3)}
+                            </Button>
+                        )
+                    )
+                }
+            </Box>
+            )
+        }
+        )
     return(
         <Box className={classes.bookingFormRoom}>
-            {
-
-                showTimeRoom.map(
-                    (room, index)=>
-                        (
-                            <React.Fragment key={index}>
-                                <Button variant="contained">
-                                    <Typography variant="h4" className={classes.headerRoom}>
-                                        {room.room_name} &nbsp;
-                                    </Typography>
-                                    {
-                                    room.show_time_date.slice(-8,-3)
-                                }</Button>
-                            </React.Fragment>
-                        )
-                )
-            }
+            {room}
         </Box>
     )
 }
@@ -285,14 +287,16 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                 </Box>
             </Box>
             <Box className={classes.booking}>
-                <BookingFormLocation
-                    provinces={provinces}
-                    onItemClickLocation={onItemClickLocation}
-                    cinemas={cinemas}
-                    onItemClickCinema={onItemClickCinema}
-                    bookingTime={bookingtime}
-                    onItemClickTime={onItemClickTime}
-                />
+                {
+                    (activeStep <= 1) ?(<BookingFormLocation
+                        provinces={provinces}
+                        onItemClickLocation={onItemClickLocation}
+                        cinemas={cinemas}
+                        onItemClickCinema={onItemClickCinema}
+                        bookingTime={bookingtime}
+                        onItemClickTime={onItemClickTime}
+                    />) : ""
+                }
                 {
                     (activeStep === 1) ?
                         (
@@ -303,6 +307,11 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                                 movie_id={movieId}
                             />
                         ) : ""
+                }
+                {
+                    (activeStep ===2)? (
+                        <BookingChooseSeat />
+                    ) : ""
                 }
                 {/*Firm item*/}
                 <Box className={classes.bookingFormFirm}>
@@ -331,15 +340,15 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                                     Back
                                 </ColorButton>
                                 {
-                                    (activeStep === steps.length - 1)?
+                                    (activeStep === steps.length)?
                                         (
                                             <ColorButton variant="contained" disabled color="secondary" onClick={handleNext}>
-                                                {activeStep === steps.length - 2 ? 'Finish' : 'Next'}
+                                                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                                             </ColorButton>
                                         ):
                                         (
                                             <ColorButton variant="contained"  color="secondary" onClick={handleNext}>
-                                                {activeStep === steps.length - 2 ? 'Finish' : 'Next'}
+                                                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                                             </ColorButton>
                                         )
                                 }

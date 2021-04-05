@@ -38,7 +38,6 @@ const Movie = ({match})=>{
                 }
                 bannerType="movie"
             />
-             Content
             <ConetentMovie
                 movie_id={match.params.id}
             />

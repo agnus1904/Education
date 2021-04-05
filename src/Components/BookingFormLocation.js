@@ -71,16 +71,6 @@ const BookingFormLocation =(props)=>{
     const [location, setLocation] = React.useState("");
     const [cinema, setCinema] = React.useState("");
     const [bookingtime, setBookingtime] = React.useState("");
-    //     ()=>{
-    //         let today = new Date();
-    //         let dd = String(today.getDate()).padStart(2, '0');
-    //         let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    //         let yyyy = today.getFullYear();
-    //
-    //         today = yyyy + '-' + mm + '-' + dd;
-    //         return today;
-    //     }
-    // );
 
     const {
         onItemClickLocation,
@@ -163,22 +153,41 @@ const BookingFormLocation =(props)=>{
                     }
                 </Select>
             </FormControl>
-            <TextField
-                id="date"
-                type="date"
-                defaultValue={bookingTime}
-                className={classes.textField}
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                InputProps={{
-                    className: classes.multilineColor,
-                    inputProps: { min: "2021-03-27" }
-                }}
-                variant="filled"
-                color="primary"
-                onChange={handleBookingTime}
-            />
+            <Box display="flex" flexDirection="column">
+                <TextField
+                    id="date"
+                    type="date"
+                    defaultValue={bookingTime}
+                    className={classes.textField}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    InputProps={{
+                        className: classes.multilineColor,
+                        inputProps: { min: "2021-03-27" }
+                    }}
+                    variant="filled"
+                    color="primary"
+                    onChange={handleBookingTime}
+                />
+                {/*<TextField*/}
+                {/*    id="time"*/}
+                {/*    type="time"*/}
+                {/*    defaultValue="07:30"*/}
+                {/*    className={classes.textField}*/}
+                {/*    variant="filled"*/}
+                {/*    color="primary"*/}
+                {/*    InputLabelProps={{*/}
+                {/*        shrink: true,*/}
+                {/*    }}*/}
+                {/*    InputProps={{*/}
+                {/*        className: classes.multilineColor,*/}
+                {/*    }}*/}
+                {/*    inputProps={{*/}
+                {/*        step: 300, // 5 min*/}
+                {/*    }}*/}
+                {/*/>*/}
+            </Box>
         </Box>
     )
 }

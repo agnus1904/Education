@@ -106,7 +106,6 @@ const Banner = (props)=>{
                     ""           
                 }
             </Box>
-            <h1>Banner-Home</h1>
         </Box>
     )
 }

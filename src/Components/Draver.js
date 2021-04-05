@@ -16,6 +16,13 @@ import Box from '@material-ui/core/Box';
 
 import BookingFormLocation from "./BookingFormLocation"
 import axios from "axios";
+import {FormControl, TextField} from "@material-ui/core";
+import CreateNewMovie from "./CreateNewMovie";
+import CreateNewProvince from "./CreateNewProvince";
+import CreateNewCinema from "./CreateNewCinema";
+import CreateNewRoom from "./CreateNewRoom";
+import CreateNewActor from "./CreateNewActor";
+import CreateNewShowtime from "./CreateNewShowTime";
 
 const drawerWidth = 240;
 
@@ -33,13 +40,13 @@ const useStyles = makeStyles((theme) => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
-        color: "white",
+        color: "black",
         "& .MuiDrawer-paper":{
             position: "relative",
             paddingTop: 60,
             color: "#EEE",
             zIndex: 0,
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: "#333",
         },
         "& .MuiTypography-body1":{
             fontSize: "1rem",
@@ -53,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     toolbar: theme.mixins.toolbar,
     content: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: "#333",
         padding: theme.spacing(3),
     },
 }));
@@ -78,8 +85,8 @@ const Accordion = withStyles({
 })(MuiAccordion);
 const AccordionSummary = withStyles((theme)=>({
     root: {
-        backgroundColor: theme.palette.background.default,
-        color: theme.palette.primary.main,
+        backgroundColor: "#333",
+        color: "#EEE",
         borderBottom: '1px solid #DDD',
         marginBottom: -1,
         minHeight: 56,
@@ -97,8 +104,8 @@ const AccordionSummary = withStyles((theme)=>({
 
 const AccordionDetails = withStyles((theme) => ({
     root: {
-        backgroundColor: theme.palette.background.default,
-        color: theme.palette.primary.main,
+        backgroundColor: "#333",
+        color: "#EEE",
         padding: theme.spacing(2),
     },
 }))(MuiAccordionDetails);
@@ -116,7 +123,9 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    <Typography component={'div'}>
+                        {children}
+                    </Typography>
                 </Box>
             )}
         </div>
@@ -151,9 +160,11 @@ export default function PermanentDrawerLeft() {
         }
     );
 
-    console.log(province,"province");
-    console.log(cinema,"cinema");
-    console.log(bookingtime,"bookingtime");
+    const [bookingHour, setBookingHour] = React.useState();
+    //
+    // console.log(province,"province");
+    // console.log(cinema,"cinema");
+    // console.log(bookingtime,"bookingtime");
 
 
     async function fetchProvince() {
@@ -206,6 +217,8 @@ export default function PermanentDrawerLeft() {
         setValue(newValue);
     };
 
+    // console.log(cinema, bookingtime);
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -235,16 +248,20 @@ export default function PermanentDrawerLeft() {
                                     aria-label="Vertical tabs example"
                                     className={classes.tabs}
                                 >
-                                    <Tab label="Item One" {...a11yProps(0)} />
-                                    <Tab label="Item Two" {...a11yProps(1)} />
+                                    <Tab label="New Province" {...a11yProps(0)} />
+                                    <Tab label="New Cinema" {...a11yProps(1)} />
+                                    <Tab label="New Room" {...a11yProps(2)} />
+                                    <Tab label="New Movie" {...a11yProps(3)} />
+                                    <Tab label="New Actor" {...a11yProps(4)} />
+                                    <Tab label="New Show Time" {...a11yProps(5)} />
                                 </Tabs>
                             </AccordionDetails>
                         </Accordion>
                     </ListItem>
-                    <ListItem button>
+                    <ListItem >
                         <Accordion square expanded={expanded === `panel2`}
                                    onChange={handleChange(`panel2`)}>
-                            <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+                            <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
                                 <Typography>Management</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
@@ -256,8 +273,8 @@ export default function PermanentDrawerLeft() {
                                     aria-label="Vertical tabs example"
                                     className={classes.tabs}
                                 >
-                                    <Tab label="Item Three" {...a11yProps(2)} />
-                                    <Tab label="Item For" {...a11yProps(3)} />
+                                    <Tab label="Item Three" {...a11yProps(6)} />
+                                    <Tab label="Item For" {...a11yProps(7)} />
                                 </Tabs>
                             </AccordionDetails>
                         </Accordion>
@@ -268,28 +285,41 @@ export default function PermanentDrawerLeft() {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Box>
+                    {/*<React.StrictMode>*/}
                     <TabPanel value={value} index={0}>
-                        Item One
-                        <BookingFormLocation
-                            provinces={provinces}
-                            onItemClickLocation={onItemClickLocation}
-                            cinemas={cinemas}
-                            onItemClickCinema={onItemClickCinema}
-                            bookingTime={bookingtime}
-                            onItemClickTime={onItemClickTime}
-                        />
+                        Create New Province
+                        <br/>
+                        <CreateNewProvince />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        Item Two
+                        Create New Cinema
+                        <br/>
+                        <CreateNewCinema />
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        Item Three
+                        Create New Room
+                        <br/>
+                        <CreateNewRoom />
                     </TabPanel>
                     <TabPanel value={value} index={3}>
-                        Item For
+                        Create New Movie
+                        <br/>
+                        <CreateNewMovie />
                     </TabPanel>
+                    <TabPanel value={value} index={4}>
+                        Create New Actor
+                        <br/>
+                        <CreateNewActor />
+                    </TabPanel>
+                    <TabPanel value={value} index={5}>
+                        Create New Show Time
+                        <br/>
+                        <CreateNewShowtime />
+                    </TabPanel>
+                    {/*</React.StrictMode>*/}
                 </Box>
             </main>
+
         </div>
     );
 }

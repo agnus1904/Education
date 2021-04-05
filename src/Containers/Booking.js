@@ -65,7 +65,7 @@ const Booking = (props)=> {
 
     if(login===0){
         return(
-            <Box className={classes.root}></Box>
+            <Box className={classes.root} />
         )
     }else{
         if(props.match.params.id){
@@ -77,7 +77,7 @@ const Booking = (props)=> {
                 </Box>
             )
         }else{
-            props.history.push("/Movies");
+            props.history.push("/Movies/booking");
             return 0;
         }
     }

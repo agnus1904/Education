@@ -160,7 +160,8 @@ const ContentMovie = (props)=>{
                                 </Typography>
                                 <Typography color="primary" variant="subtitle2" >
                                     {
-                                        movie.release_date
+                                        movie.release_date ?
+                                        movie.release_date.slice(0,-9) : ""
                                     }
                                 </Typography>
                             </Box>

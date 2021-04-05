@@ -28,6 +28,7 @@ function App(props) {
                     <Route path="/Admin/:id" exact component={Admin} />
                     <Route path="/" exact component={Home} />
                     <Route path="/Movies" exact component={Movies} />
+                    <Route path="/Movies/booking" exact component={Movies} />
                     <Route path="/Movie/:id" exact component={Movie} />
                     <Route path="/Actor/:id" exact component={Actor} />
                     <Route path="/Login/:id" exact component={Login} />

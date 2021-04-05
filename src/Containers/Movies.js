@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Movies = ()=>{
+const Movies = (props)=>{
 
     const classes = useStyles();
 
@@ -156,9 +156,20 @@ const Movies = ()=>{
             )
         ));
 
+    console.log(props.match);
 
     return(
         <Box className={classes.root}>
+            {
+                props.match.path === "/Movies/booking" ? (<Box display="flex" justifyContent="center"
+                                style={{width: "100%"}}
+            >
+                <Typography variant="h2" color="error">
+                    You must to choose a movie
+                </Typography>
+                    <br/>
+            </Box>) : (<></>)
+            }
             <Typography variant="h1" color="primary" className={classes.header}>
                 Opening this week
             </Typography>

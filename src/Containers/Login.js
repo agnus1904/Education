@@ -99,11 +99,17 @@ const Login = (props)=>{
     }
 
     const handleForm= (e)=>{
-        e.preventDefault();
-        if( e.key === "Enter" || e.target.value==="submit"){
-            // console.log("form submited", user, password);
+        if( e.key === "Enter"){
+            e.preventDefault();
             fetchData();
+            // console.log(e.target.value);
+            // e.target.value="";
+            // console.log("form submited", user, password);
         }
+    }
+
+    const handleFormSubmit= ()=>{
+        fetchData();
     }
 
     const handleChangeUser= (e)=>{
@@ -112,11 +118,6 @@ const Login = (props)=>{
 
     const handleChangePassword= (e)=>{
         setPassword(e.target.value)
-    }
-
-    const handleChangeTime= (e)=>{
-        setTime(e.target.value);
-        console.log(e.target.value);
     }
 
     return(
@@ -152,7 +153,8 @@ const Login = (props)=>{
                         variant="contained"
                         color="primary"
                         value="submit"
-                        onClick={handleForm}>submit</Button>
+                        onClick={handleFormSubmit}
+                >submit</Button>
                 <Typography className={classes.register}
                             variant="h5" color="primary">
                     Don't have an account
