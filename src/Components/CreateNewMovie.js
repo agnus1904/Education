@@ -41,22 +41,22 @@ const CreateNewMovie = (props)=>{
 
     async function fetchData() {
         let dataFetch = new FormData();
-        dataFetch.append("", data);
-        dataFetch.append("", data);
-        dataFetch.append("", data);
-        dataFetch.append("", data);
-        dataFetch.append("", data);
-        dataFetch.append("", data);
-        dataFetch.append("", data);
-        dataFetch.append("", data);
-        dataFetch.append("", data);
-        dataFetch.append("", data);
+        dataFetch.append("movie_name", data.movie_name);
+        dataFetch.append("movie_name_banner", data.movie_name_banner);
+        dataFetch.append("language", data.language);
+        dataFetch.append("avatar", data.avatar);
+        dataFetch.append("banner", data.banner);
+        dataFetch.append("release", data.release);
+        dataFetch.append("duration", data.duration);
+        dataFetch.append("main_type", data.main_type);
+        dataFetch.append("country", data.country);
+        dataFetch.append("description", data.description);
         let response = await axios.post(
-            `http://localhost/Cinema/Admin/CreateNewMovie`, fetchData
+            `http://localhost/Cinema/Admin/CreateNewMovie`, dataFetch
         );
 
         let res = await response.data;
-        console.log(res);
+        setStatus(res.message);
     }
 
     const handleMovieName = (e)=>{
@@ -156,7 +156,7 @@ const CreateNewMovie = (props)=>{
             </FormControl>
             <FormControl className={classes.formControl}>
                 <Typography variant="h4" className={classes.label}>
-                    Avatar small
+                    Avatar Movie
                 </Typography>
                 <br/>
                 <Button
@@ -177,7 +177,7 @@ const CreateNewMovie = (props)=>{
             </FormControl>
             <FormControl className={classes.formControl}>
                 <Typography variant="h4" className={classes.label}>
-                    Avatar banner
+                    Banner Image
                 </Typography>
                 <br/>
                 <Button

@@ -78,6 +78,8 @@ const FirmItem =  React.memo((props)=>{
         customer_id,
     } = props;
 
+    console.log("firm render");
+
     async function fetchItem(){
       let response = await axios(
           `http://localhost/Cinema/Movie/GetMovieItem/${movieId}`
@@ -110,10 +112,6 @@ const FirmItem =  React.memo((props)=>{
             behavior: "smooth"
         });
     }
-    // if(item==={}){
-    //     return(<>abcd</>)
-    // }else
-    // {
     console.log(item);
     if(!item){
         return(<CircularProgress color="secondary" />);

@@ -1,7 +1,6 @@
 import React from "react";
-import {Box, Button} from "@material-ui/core";
+import {Box} from "@material-ui/core";
 import {makeStyles, withStyles} from "@material-ui/core/styles";
-import Draver from "../Components/Draver";
 import Typography from "@material-ui/core/Typography";
 import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
@@ -158,15 +157,15 @@ const Admin = ()=>{
                            onChange={handleChange(`panel2`)}
                 >
                     <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-                        <Typography variant={"h3"}>Create New</Typography>
+                        <Typography variant={"h3"}>Management</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography className={classes.item} variant={"h5"}>
-                            New Province</Typography>
+                            Movie</Typography>
                         <Typography className={classes.item} variant={"h5"}>
-                            New Cinema</Typography>
+                            Actor</Typography>
                         <Typography className={classes.item} variant={"h5"}>
-                            New Room</Typography>
+                            Ticket</Typography>
                     </AccordionDetails>
                 </Accordion>
             </Box>

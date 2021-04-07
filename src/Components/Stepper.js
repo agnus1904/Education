@@ -126,7 +126,6 @@ function getStepContent(stepIndex) {
 const BookingRoom=(props)=>{
     const classes = useStyles();
     const [showTimeRoom, setShowTimeRoom] = React.useState([]);
-    const [group, setGroup] = React.useState([]);
     const {
         cinema_id,
         booking_time,
@@ -145,16 +144,22 @@ const BookingRoom=(props)=>{
         );
         let res = await response.data;
         setShowTimeRoom(res["data"]);
-        let change = res["data"].reduce((r, a) => {
-            r[a.room_name] = [...r[a.room_name] || [], a];
-            return r;
-        }, {});
-        setGroup(change);
+
     }
+
+
 
     React.useEffect(() => {
         fetchShowTimeRoom();
     },[]);
+
+    let group =
+        showTimeRoom ?
+            showTimeRoom.reduce((r, a) => {
+                r[a.room_name] = [...r[a.room_name] || [], a];
+                return r;
+            }, {}) : [];
+
     let room=[];
         Object.entries(group).forEach(([key, value]) =>{
             room.push(

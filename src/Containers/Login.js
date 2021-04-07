@@ -4,6 +4,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import axios from "axios";
 import { useCookies } from 'react-cookie';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const useStyles = makeStyles((theme) => ({
     root:{
@@ -71,6 +77,26 @@ const Login = (props)=>{
             customer_password: password,
         }
     const match = props.match;
+
+
+    const [values, setValues] = React.useState({
+        amount: '',
+        password: '',
+        weight: '',
+        weightRange: '',
+        showPassword: false,
+    });
+
+    const handleChange = (prop) => (event) => {
+        setValues({ ...values, [prop]: event.target.value });
+    };
+
+    const handleClickShowPassword = () => {
+        setValues({ ...values, showPassword: !values.showPassword });
+    };
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     async function fetchData() {
          let response = await axios.post(
@@ -144,6 +170,7 @@ const Login = (props)=>{
                 />
                 <TextField label="Password"
                            value={password}
+                           type="password"
                            onChange={handleChangePassword}
                            className={classes.inputTextField}
                            InputLabelProps={{className: classes.label}}
@@ -157,7 +184,7 @@ const Login = (props)=>{
                 >submit</Button>
                 <Typography className={classes.register}
                             variant="h5" color="primary">
-                    Don't have an account
+                    Don't have an account &nbsp;&nbsp;
                     <Button type="button"
                        variant="contained"
                        color="primary"

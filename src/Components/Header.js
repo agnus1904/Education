@@ -220,7 +220,7 @@ export default function Header(props) {
                         }
                         onClick={()=>{scrollToTop(); if(menu){iconMenuClick()}}}
                         >
-                            AMC
+                            MLEM
                     </Link>
                     <ul 
                         className={
@@ -263,14 +263,6 @@ export default function Header(props) {
                                 menu ? 
                                 ()=> {iconMenuClick(); scrollToTop()} 
                                 : ()=> scrollToTop() }
-                        >EVENTS
-                        </Link></li>
-                        <li><Link 
-                            to="/" 
-                            onClick={
-                                menu ? 
-                                ()=> {iconMenuClick(); scrollToTop()} 
-                                : ()=> scrollToTop() }
                         >CONTACT
                         </Link></li>
                     </ul>
@@ -283,13 +275,13 @@ export default function Header(props) {
                         classNames(classes.appBarRight, !menu ? "": classes.menuShow)
                     }
                 >
-                    <Box pt={1} mx={4} 
-                        className={
-                            classNames(classes.appBarIconSearch, headerSticky? "": classes.appBarIconSearchSticky,!menu? "": classes.appBarIconSearchSticky)
-                        }
-                    >
-                        <SearchIcon fontSize="large" style={{cursor: "pointer"}} className={classes.searchIcon} />
-                    </Box>
+                    {/*<Box pt={1} mx={4} */}
+                    {/*    className={*/}
+                    {/*        classNames(classes.appBarIconSearch, headerSticky? "": classes.appBarIconSearchSticky,!menu? "": classes.appBarIconSearchSticky)*/}
+                    {/*    }*/}
+                    {/*>*/}
+                    {/*    <SearchIcon fontSize="large" style={{cursor: "pointer"}} className={classes.searchIcon} />*/}
+                    {/*</Box>*/}
                     <Box>
                         <Button
                             href="/Admin/1"
