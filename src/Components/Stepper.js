@@ -7,12 +7,14 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { red, blue, yellow, green } from '@material-ui/core/colors';
-import {Box, FormControl, InputLabel, Select, TextField} from "@material-ui/core";
+import {Box} from "@material-ui/core";
 import FirmItem from "./FirmItem";
 import BookingFormLocation from "./BookingFormLocation";
 import axios from "axios";
-import {object} from "prop-types";
 import BookingChooseSeat from "./BookingChooseSeat";
+import {Link} from "react-router-dom";
+import {useCookies} from "react-cookie";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -194,6 +196,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const [provinces, setProvinces] = React.useState([]);
     const [cinema, setCinema] = React.useState("");
     const [cinemas, setCinemas] = React.useState([]);
+    const [cookies, setCookie] = useCookies(['name']);
     const [bookingtime, setBookingTime] = React.useState(
         ()=>{
             let today = new Date();
@@ -265,6 +268,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         setActiveStep(0);
     };
 
+    const handleLogout= ()=>{
+        setCookie('idLogin', false , { path: '/' })
+    }
+
 
     return (
         <div className={classes.root}>
@@ -285,9 +292,18 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                     <Typography
                         // style={{color:""}}
                         variant="h4"
-                        color="error"
+                        color="primary"
                     >
                         Ha Anh Khoa
+                    </Typography>
+                    <Typography
+                        // style={{color:""}}
+                        variant="h5"
+                        onClick={handleLogout}
+                    >
+                        <Link to="/"
+                            style={{color:"red",textDecoration: "none"}}
+                        >Logout</Link>
                     </Typography>
                 </Box>
             </Box>

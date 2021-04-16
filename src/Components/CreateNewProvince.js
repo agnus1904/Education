@@ -1,9 +1,9 @@
 import React from "react"
 import {Box, Button, FormControl, TextField, Typography} from "@material-ui/core";
-import {red} from "@material-ui/core/colors";
 import axios from "axios";
 import { withStyles } from '@material-ui/core/styles';
 import FormStyle from "./FormStyle";
+import CustomInput from "./CustomInput/CustomInput";
 
 
 const CreateNewProvince = (props)=>{

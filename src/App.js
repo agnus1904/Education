@@ -1,7 +1,6 @@
 import './App.css';
 import React from "react";
 import {BrowserRouter as Router, Route} from "react-router-dom";
-import { withRouter } from "react-router";
 
 import Header from "./Components/Header";
 import Home from "./Containers/Home";

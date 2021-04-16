@@ -10,12 +10,14 @@ import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Snackbar from "../Components/Snackbar/Snackbar";
 
 const useStyles = makeStyles((theme) => ({
     root:{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        backgroundImage: "url('http://localhost/Cinema/Public/Imgs/login.jpeg')",
     },
     form: {
         border: "2px solid white",
@@ -68,8 +70,10 @@ const Login = (props)=>{
     const classes = useStyles();
     const [user, setUser] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [time, setTime] = React.useState("");
     const [cookies, setCookie] = useCookies(['name']);
+    const [open, setOpen] = React.useState(false);
+    const [color, setColor] = React.useState("danger");
+    const [status, setStatus] = React.useState("");
     const [error , setError] = React.useState("");
     const data =
         {
@@ -107,18 +111,25 @@ const Login = (props)=>{
         console.log(res);
         if(res.status){
             setCookie('idLogin', res["customer_id"], { path: '/' });
-            // console.log(cookies["idLogin"]);
-            // props.history.push("/Booking/12")
-            if(match!==""){
-                props.history.push(`/Booking/${
-                    match.params.id ? match.params.id : ""
-                }`);
-            }else{
-                props.history.push(`/`);
-            }
+            setOpen(true);
+            setColor("success");
+            setStatus("Login Success");
+            setTimeout(function () {
+                if(match!==""){
+                    props.history.push(`/Booking/${
+                        match.params.id ? match.params.id : ""
+                    }`);
+                }else{
+                    props.history.push(`/`);
+                }
+            }, 3000);
+
             setError("");
         }
         else{
+            setColor("danger");
+            setStatus(res.error);
+            setOpen(true);
             setError(res.error);
         }
         // console.log(res.error);
@@ -149,7 +160,14 @@ const Login = (props)=>{
     return(
         <Box style={{minHeight: "100vh"}} className={classes.root}>
             <br/><br/><br/><br/><br/>
-
+            <Snackbar
+                place="bl"
+                message={status}
+                open={open}
+                closeNotification={() => setOpen(false)}
+                close
+                color={color}
+            />
             <form
                 className={classes.form}
                 noValidate autoComplete="off"
@@ -159,7 +177,7 @@ const Login = (props)=>{
                     Login
                 </Typography>
                 <Typography variant="h5" color="error">
-                    {error}
+                    {/*{error}*/}
                 </Typography>
                 <TextField label="Username"
                            value={user}

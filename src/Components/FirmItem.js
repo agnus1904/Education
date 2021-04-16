@@ -91,7 +91,6 @@ const FirmItem =  React.memo((props)=>{
       );
 
       let resLike = await responseLike.data.data;
-      // console.log(resLike.like, "movie_like", movieId);
       setItem(resItem);
       setlike(resLike.like);
     }

@@ -87,6 +87,7 @@ const CreateNewMovie = (props)=>{
         // = URL.createObjectURL(img);
         setData(newData);
     }
+
     const handleLanguage = (e)=>{
         const newData = {...data};
         newData.language= e.target.value;
@@ -116,6 +117,7 @@ const CreateNewMovie = (props)=>{
         newData.release = e.target.value;
         setData(newData);
     }
+
 
     console.log(data);
 
