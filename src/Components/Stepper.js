@@ -137,7 +137,7 @@ const BookingRoom=(props)=>{
     console.log("booking room render", cinema_id, booking_time, movie_id);
 
     async function fetchShowTimeRoom(cinemaId) {
-        let response = await axios.post(
+        let response = await axios(
             `http://localhost/Cinema/PublicController/GetShowTime/
             ${cinema_id}/
             ${movie_id}/
@@ -146,7 +146,6 @@ const BookingRoom=(props)=>{
         );
         let res = await response.data;
         setShowTimeRoom(res["data"]);
-
     }
 
 

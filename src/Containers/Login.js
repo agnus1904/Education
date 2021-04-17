@@ -1,15 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import {Box, Button, Typography} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import axios from "axios";
 import { useCookies } from 'react-cookie';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import Snackbar from "../Components/Snackbar/Snackbar";
 
 const useStyles = makeStyles((theme) => ({
@@ -82,26 +76,6 @@ const Login = (props)=>{
         }
     const match = props.match;
 
-
-    const [values, setValues] = React.useState({
-        amount: '',
-        password: '',
-        weight: '',
-        weightRange: '',
-        showPassword: false,
-    });
-
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-    };
-
-    const handleClickShowPassword = () => {
-        setValues({ ...values, showPassword: !values.showPassword });
-    };
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
-
     async function fetchData() {
          let response = await axios.post(
             `http://localhost/Cinema/Login/LoginUser/`, JSON.stringify(data)
@@ -132,16 +106,12 @@ const Login = (props)=>{
             setOpen(true);
             setError(res.error);
         }
-        // console.log(res.error);
     }
 
     const handleForm= (e)=>{
         if( e.key === "Enter"){
             e.preventDefault();
             fetchData();
-            // console.log(e.target.value);
-            // e.target.value="";
-            // console.log("form submited", user, password);
         }
     }
 
