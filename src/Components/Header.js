@@ -284,7 +284,7 @@ export default function Header(props) {
                     {/*</Box>*/}
                     <Box>
                         <Button
-                            href="/Admin/1"
+                            href="/"
                             variant="contained"
                             className={classes.btn}
                         >

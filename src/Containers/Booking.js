@@ -28,7 +28,7 @@ const Booking = (props)=> {
     const classes = useStyles();
 
     const handleLogOut= ()=>{
-        setCookie('idLogin', 0, { path: '/' });
+        setCookie('idLogin', false, { path: '/' });
         props.history.push("/Login");
     }
 
@@ -73,7 +73,9 @@ const Booking = (props)=> {
                 <Box className={classes.root}>
                     <Stepper movieId={
                         props.match.params.id ? props.match.params.id : 0
-                    }/>
+                    }
+                        handleLogout={handleLogOut}
+                    />
                 </Box>
             )
         }else{

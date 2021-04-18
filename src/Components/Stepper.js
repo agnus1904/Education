@@ -6,7 +6,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { red, blue, yellow, green } from '@material-ui/core/colors';
+import { red, yellow, green } from '@material-ui/core/colors';
 import {Box} from "@material-ui/core";
 import FirmItem from "./FirmItem";
 import BookingFormLocation from "./BookingFormLocation";
@@ -14,6 +14,7 @@ import axios from "axios";
 import BookingChooseSeat from "./BookingChooseSeat";
 import {Link} from "react-router-dom";
 import {useCookies} from "react-cookie";
+import Snackbar from "./Snackbar/Snackbar";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -131,10 +132,12 @@ const BookingRoom=(props)=>{
     const {
         cinema_id,
         booking_time,
-        movie_id
+        movie_id,
+        handleShowTimeClick,
+        activeShowTime
     }= props;
 
-    console.log("booking room render", cinema_id, booking_time, movie_id);
+    // console.log("booking room render", cinema_id, booking_time, movie_id);
 
     async function fetchShowTimeRoom(cinemaId) {
         let response = await axios(
@@ -161,6 +164,9 @@ const BookingRoom=(props)=>{
                 return r;
             }, {}) : [];
 
+    let size = Object.values(group).length;
+    console.log(group, "this is groups");
+
     let room=[];
         Object.entries(group).forEach(([key, value]) =>{
             room.push(
@@ -171,7 +177,14 @@ const BookingRoom=(props)=>{
                 {
                     value.map(
                         (item, index)=>(
-                            <Button variant="contained" key={index}>
+                            <Button
+                                color={
+                                    activeShowTime===item.show_time_id ?
+                                        "secondary" : "default"
+                                }
+                                variant="contained" key={index}
+                                onClick={()=>handleShowTimeClick(item.show_time_id)}
+                            >
                                 {item.show_time_date.slice(-8,-3)}
                             </Button>
                         )
@@ -183,18 +196,24 @@ const BookingRoom=(props)=>{
         )
     return(
         <Box className={classes.bookingFormRoom}>
-            {room}
+            {
+                size===0? "Have no Show Time" : room
+            }
         </Box>
     )
 }
 
 export default function HorizontalLabelPositionBelowStepper(props) {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+    const [color, setColor] = React.useState("danger");
+    const [status, setStatus] = React.useState("");
     const [activeStep, setActiveStep] = React.useState(0);
     const [province, setProvince] = React.useState("");
     const [provinces, setProvinces] = React.useState([]);
     const [cinema, setCinema] = React.useState("");
     const [cinemas, setCinemas] = React.useState([]);
+    const [showTimeId, setShowTimeId] = React.useState(0);
     const [cookies, setCookie] = useCookies(['name']);
     const [bookingtime, setBookingTime] = React.useState(
         ()=>{
@@ -210,15 +229,24 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const steps = getSteps();
 
     const {
-        movieId
+        movieId,
+        handleLogout
     } = props;
 
-    console.log("stepper render");
-    console.log(province,"province",
-        bookingtime,"bookingtime",
-        cinema,"cinema"
-        ,movieId, "movie id");
+    if(open===true){
+        setTimeout(function() {
+            if (open===true){
+                setOpen(false);
+            }
+        }, 6000);
+    }
 
+    const handleShowTimeClick = (show_time_id)=>{
+        setShowTimeId(show_time_id);
+    }
+
+    console.log("stepper render");
+    console.log(activeStep, "this is active step");
 
     async function fetchProvince() {
         let response = await axios.post(
@@ -242,6 +270,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         fetchProvince();
     },[]);
 
+    React.useEffect(
+        ()=>{
+            setActiveStep(0);
+        },[province,cinema,bookingtime]
+    )
+
     const onItemClickLocation = (proviceId)=>{
         setProvince(proviceId);
         fetchCinema(proviceId);
@@ -256,6 +290,18 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     }
 
     const handleNext = () => {
+        if(activeStep===0 && (province===""||cinema==="")){
+            setColor("danger");
+            setStatus("Please choose province and cinema to continue");
+            setOpen(true);
+            return;
+        }
+        if(activeStep===1 && showTimeId===0) {
+            setColor("danger");
+            setStatus("Please choose ShowTime to continue");
+            setOpen(true);
+            return;
+        }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
@@ -267,13 +313,21 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         setActiveStep(0);
     };
 
-    const handleLogout= ()=>{
-        setCookie('idLogin', false , { path: '/' })
-    }
+    // const handleLogout= ()=>{
+    //     setCookie('idLogin', false , { path: '/' })
+    // }
 
 
     return (
         <div className={classes.root}>
+            <Snackbar
+                place="bl"
+                message={status}
+                open={open}
+                closeNotification={() => setOpen(false)}
+                close
+                color={color}
+            />
             <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
@@ -325,12 +379,16 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                                 cinema_id={cinema}
                                 booking_time={bookingtime}
                                 movie_id={movieId}
+                                handleShowTimeClick={handleShowTimeClick}
+                                activeShowTime={showTimeId}
                             />
                         ) : ""
                 }
                 {
                     (activeStep ===2)? (
-                        <BookingChooseSeat />
+                        <BookingChooseSeat
+                            showTimeId={showTimeId}
+                        />
                     ) : ""
                 }
                 {/*Firm item*/}
